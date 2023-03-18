@@ -1,0 +1,30 @@
+{
+  "name": "gas-free-token",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "node": "npx hardhat node",
+    "test": "npx hardhat test",
+    "coverage": "npx hardhat coverage",
+    "size-check": "npx hardhat size-contracts"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "@nomicfoundation/hardhat-toolbox": "^1.0.2",
+    "@nomiclabs/hardhat-ethers": "^2.1.1",
+    "@nomiclabs/hardhat-etherscan": "^3.1.0",
+    "ethers": "^5.7.1",
+    "hardhat": "^2.11.2",
+    "hardhat-gas-reporter": "^1.0.8",
+    "keyv": "^4.5.2"
+  },
+  "dependencies": {
+    "@openzeppelin/contracts": "^4.7.0",
+    "dotenv": "^16.0.1",
+    "hardhat-contract-sizer": "^2.6.1",
+    "solidity-coverage": "^0.7.22"
+  }
+}

@@ -74,6 +74,16 @@ export class TokenService {
     // TODO: Web3ContractAddressに値が入っていたら以下のエラーメッセージを返却
 
     // Deploy a new contract
+    const bytecode = ""
+    const abi = ""
+
+    const provider = new ethers.JsonRpcProvider("http://localhost:8545") //切り替えられるようにする
+    const privateKey = "xxx" //TODO: 環境変数化
+
+    // Create the contract object
+    const wallet = new ethers.Wallet(privateKey, provider)
+    const factory = new ethers.ContractFactory(abi, bytecode, wallet)
+    const contract = await factory.deploy()
 
     // データベースに登録されている(walletAddress, Token)の組み合わせを全取得する
 
