@@ -1,7 +1,7 @@
 import * as functions from "firebase-functions"
 import { TokenService } from "../service/TokenService"
 
-export const Create = functions.region("asia-northeast1").https.onRequest(async (req, res) => {
+export const MigrateTest = functions.region("asia-northeast1").https.onRequest(async (req, res) => {
   res.set("Access-Control-Allow-Origin", "*")
   if (req.method === "OPTIONS") {
     res.set("Access-Control-Allow-Methods", "GET")
@@ -12,10 +12,13 @@ export const Create = functions.region("asia-northeast1").https.onRequest(async 
   }
 
   type RequestData = {
+    tokenAddress: string
+    tokenName: string
+    tokenSymbol: string
     walletAddress: string
     signature: string
   }
-  const { walletAddress, signature }: RequestData = req.body
-  const responseBody = await TokenService.create(walletAddress, signature)
+  const { tokenAddress, tokenName, tokenSymbol, walletAddress, signature }: RequestData = req.body
+  const responseBody = await TokenService.migrate(tokenAddress, tokenName, tokenSymbol, walletAddress, signature, true)
   res.status(200).send(responseBody)
 })
