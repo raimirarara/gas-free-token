@@ -6,6 +6,8 @@
 
 Firebase CLI v11.24.1 is incompatible with Node.js v16.0.0 Please upgrade Node.js to version ^14.18.0 || >=16.4.0
 
+Node.js v18.0.0 で動作確認済み
+
 ### Firebase CLI
 
 ```
