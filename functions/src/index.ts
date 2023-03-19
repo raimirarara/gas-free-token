@@ -6,7 +6,9 @@ import { MigrateTest } from "./api/MigrateTest"
 import { BalanceOf } from "./api/BalanceOf"
 import { BalanceOfTest } from "./api/BalanceOfTest"
 import { Transfer } from "./api/Transfer"
-import { TransferTest } from "./api/TransfetTest"
+import { TransferTest } from "./api/TransferTest"
+import { Mint } from "./api/Mint"
+import { MintTest } from "./api/MintTest"
 
 admin.initializeApp()
 export const create = Create
@@ -17,3 +19,5 @@ export const balanceOf = BalanceOf
 export const balanceOfTest = BalanceOfTest
 export const transfer = Transfer
 export const transferTest = TransferTest
+export const mint = Mint
+export const mintTest = MintTest

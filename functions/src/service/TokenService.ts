@@ -151,6 +151,44 @@ export class TokenService {
     return { message: `Transfer successful. ${amount} tokens transferred from ${walletAddress} to ${to}` }
   }
 
+  static async mint(
+    tokenAddress: string,
+    to: string,
+    amount: number,
+    walletAddress: string,
+    signature: string,
+    testMode = false
+  ) {
+    // Check if the token has already been migrated to another contract
+    const migratedTokenAddress = await this.getDB(testMode).doc(tokenAddress).get()
+    const data = migratedTokenAddress.data()
+    if (data?.Web3ContractAddress) {
+      throw new Error(`This token is already migrated into ${data.Web3ContractAddress}`)
+    }
+    // Verify the signature
+    if (!testMode) this.verifySignature(walletAddress, signature)
+
+    // Check if the owner address matches the signer address
+    const ownerAddress = await this.getOwnerAddress(tokenAddress, testMode)
+
+    if (walletAddress.toLowerCase() !== ownerAddress) {
+      throw new Error("Authentication error: You are not allowed to execute this method.")
+    }
+
+    // Check if the recipient exists
+    const recipientRef = this.getDB(testMode).doc(tokenAddress).collection("balances").doc(to.toLowerCase())
+    const recipientDoc = await recipientRef.get()
+    if (!recipientDoc.exists) {
+      await recipientRef.set({ amount: amount })
+    } else {
+      // Increase the balance of the recipient
+      await recipientRef.update({ amount: FieldValue.increment(amount) })
+    }
+
+    // Return a success message
+    return { message: "Mint operation successful" }
+  }
+
   static async getTokenData(
     tokenAddress: string,
     db: admin.firestore.CollectionReference<admin.firestore.DocumentData>
@@ -235,5 +273,16 @@ export class TokenService {
 
     // Return the token balance
     return balanceData.amount as number
+  }
+
+  static async getOwnerAddress(tokenAddress: string, testMode: boolean): Promise<string> {
+    const doc = await this.getDB(testMode).doc(tokenAddress).get()
+    if (!doc.exists) {
+      throw new Error(`Token address ${tokenAddress} does not exist in the database`)
+    }
+
+    const tokenData = doc.data()
+
+    return tokenData!.ownerAddress
   }
 }
