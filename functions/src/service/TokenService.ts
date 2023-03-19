@@ -1,6 +1,12 @@
 import { ethers } from "ethers"
 import { v4 as uuidv4 } from "uuid"
 import * as admin from "firebase-admin"
+import { FieldValue } from "firebase-admin/firestore"
+
+interface TokenInfo {
+  tokenAddress: string
+  token: number
+}
 
 export class TokenService {
   private static TopCollectionName = "contract"
@@ -78,6 +84,65 @@ export class TokenService {
     return { web3ContractAddress }
   }
 
+  static async balanceOf(tokenAddress: string, walletAddress: string, testMode: boolean = false) {
+    // Check if the token has already been migrated to another contract
+    const migratedTokenAddress = await this.getDB(testMode).doc(tokenAddress).get()
+    const data = migratedTokenAddress.data()
+    if (data?.Web3ContractAddress) {
+      throw new Error(`This token is already migrated into ${data.Web3ContractAddress}`)
+    }
+
+    const tokenBalance = await this.getTokenBalance(tokenAddress, walletAddress, testMode)
+    const tokenInfo: TokenInfo = {
+      tokenAddress,
+      token: tokenBalance,
+    }
+
+    // Return the token balance info
+    return tokenInfo
+  }
+
+  static async transfer(
+    tokenAddress: string,
+    to: string,
+    amount: number,
+    walletAddress: string,
+    signature: string,
+    testMode: boolean = false
+  ) {
+    // Check if the token has already been migrated to another contract
+    const migratedTokenAddress = await this.getDB(testMode).doc(tokenAddress).get()
+    const data = migratedTokenAddress.data()
+    if (data?.Web3ContractAddress) {
+      throw new Error(`This token is already migrated into ${data.Web3ContractAddress}`)
+    }
+
+    // Verify the signature
+    if (!testMode) this.verifySignature(walletAddress, signature)
+
+    // Get the sender's token balance
+    const senderTokenBalance = await this.getTokenBalance(tokenAddress, walletAddress, testMode)
+
+    // Check if the sender has enough tokens to transfer
+    if (senderTokenBalance < amount) {
+      throw new Error(`Insufficient balance. You do not have enough tokens to complete this transaction.`)
+    }
+
+    // Create a Firestore transaction to update the sender's and recipient's token balances
+    const batch = admin.firestore().batch()
+
+    const senderRef = this.getDB(testMode).doc(tokenAddress).collection("balances").doc(walletAddress.toLowerCase())
+    const recipientRef = this.getDB(testMode).doc(tokenAddress).collection("balances").doc(to.toLowerCase())
+
+    batch.update(senderRef, { amount: FieldValue.increment(-amount) })
+    batch.update(recipientRef, { amount: FieldValue.increment(amount) })
+
+    await batch.commit()
+
+    // Return a success message
+    return { message: `Transfer successful. ${amount} tokens transferred from ${walletAddress} to ${to}` }
+  }
+
   static async getTokenData(
     tokenAddress: string,
     db: admin.firestore.CollectionReference<admin.firestore.DocumentData>
@@ -142,5 +207,25 @@ export class TokenService {
     await db.doc(tokenAddress.toLowerCase()).set({
       web3ContractAddress,
     })
+  }
+
+  static async getTokenBalance(tokenAddress: string, walletAddress: string, testMode: boolean): Promise<number> {
+    // Fetch the token balance of the wallet address
+    const docRef = this.getDB(testMode).doc(tokenAddress).collection("balances").doc(walletAddress.toLowerCase())
+
+    // Check if the wallet address exists in the balances collection
+    const doc = await docRef.get()
+    if (!doc.exists) {
+      throw new Error("NotFound error: The requested wallet address could not be found in the database. ")
+    }
+
+    // Get the token balance for the wallet address
+    const balanceData = doc.data()
+    if (balanceData?.amount === undefined) {
+      throw new Error("Error: Token balance not found for the requested wallet address.")
+    }
+
+    // Return the token balance
+    return balanceData.amount as number
   }
 }

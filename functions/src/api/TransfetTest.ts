@@ -1,7 +1,7 @@
 import * as functions from "firebase-functions"
 import { TokenService } from "../service/TokenService"
 
-export const Create = functions.https.onRequest(async (req, res) => {
+export const TransferTest = functions.https.onRequest(async (req, res) => {
   res.set("Access-Control-Allow-Origin", "*")
   if (req.method === "OPTIONS") {
     res.set("Access-Control-Allow-Methods", "GET")
@@ -12,12 +12,15 @@ export const Create = functions.https.onRequest(async (req, res) => {
   }
 
   type RequestData = {
+    tokenAddress: string
+    to: string
+    amount: number
     walletAddress: string
     signature: string
   }
-  const { walletAddress, signature }: RequestData = req.body
+  const { tokenAddress, to, amount, walletAddress, signature }: RequestData = req.body
   try {
-    const responseBody = await TokenService.create(walletAddress, signature)
+    const responseBody = await TokenService.transfer(tokenAddress, to, amount, walletAddress, signature, true)
     res.status(200).send(responseBody)
   } catch (error: any) {
     res.status(400).send(error.message)
