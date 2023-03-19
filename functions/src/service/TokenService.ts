@@ -134,6 +134,14 @@ export class TokenService {
     const senderRef = this.getDB(testMode).doc(tokenAddress).collection("balances").doc(walletAddress.toLowerCase())
     const recipientRef = this.getDB(testMode).doc(tokenAddress).collection("balances").doc(to.toLowerCase())
 
+    // Get the recipient's balance
+    const recipientDoc = await recipientRef.get()
+
+    // If the recipient document does not exist, create it with amount field set to 0
+    if (!recipientDoc.exists) {
+      await recipientRef.set({ amount: 0 })
+    }
+
     batch.update(senderRef, { amount: FieldValue.increment(-amount) })
     batch.update(recipientRef, { amount: FieldValue.increment(amount) })
 
