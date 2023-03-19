@@ -73,7 +73,10 @@ export class TokenService {
       throw new Error(`Authentication error: You are not allowed to execute this method.`)
     }
 
-    // TODO: Web3ContractAddressに値が入っていたら以下のエラーメッセージを返却
+    //  Web3ContractAddressに値が入っていたら以下のエラーメッセージを返却
+    if (tokenData.web3ContractAddress) {
+      throw new Error(`Authentication error: You are not allowed to execute this method.`)
+    }
 
     // Deploy a new contract
     const path = "../contracts/MyERC20.json"
