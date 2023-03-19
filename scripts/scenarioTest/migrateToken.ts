@@ -6,7 +6,7 @@ import { ethers } from "ethers"
   const signature = await wallet.signMessage(message)
 
   // トークンを作成する
-  const response = await fetch("http://127.0.0.1:5001/gas-free-token/asia-northeast1/create", {
+  const response = await fetch("http://127.0.0.1:5001/gas-free-token/us-central1/create", {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
@@ -21,7 +21,7 @@ import { ethers } from "ethers"
   const tokenAddress = responseBody.tokenAddress
 
   // トークンを移行する
-  const response2 = await fetch("http://127.0.0.1:5001/gas-free-token/asia-northeast1/migrate", {
+  const response2 = await fetch("http://127.0.0.1:5001/gas-free-token/us-central1/migrate", {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
