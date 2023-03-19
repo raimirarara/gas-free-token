@@ -21,7 +21,6 @@ import { ethers } from "ethers"
   const tokenAddress = responseBody.tokenAddress
 
   // トークンを移行する
-  const url = "http://127.0.0.1:5001/gas-free-token/asia-northeast1/create"
   const response2 = await fetch("http://127.0.0.1:5001/gas-free-token/asia-northeast1/migrate", {
     method: "POST",
     headers: {
