@@ -16,6 +16,10 @@ export const Create = functions.region("asia-northeast1").https.onRequest(async 
     signature: string
   }
   const { walletAddress, signature }: RequestData = req.body
-  const responseBody = await TokenService.create(walletAddress, signature)
-  res.status(200).send(responseBody)
+  try {
+    const responseBody = await TokenService.create(walletAddress, signature)
+    res.status(200).send(responseBody)
+  } catch (error: any) {
+    res.status(400).send(error.message)
+  }
 })

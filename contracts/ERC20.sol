@@ -6,11 +6,12 @@ contract MyERC20 is ERC20PresetMinterPauser {
     constructor(
         string memory _tokenName,
         string memory _tokenSymbol,
-        uint256 _tokenInitialSupply
+        address[] memory _recipients, 
+        uint256[] memory _amounts
     ) ERC20PresetMinterPauser(_tokenName, _tokenSymbol) {
         setupMinterRole(msg.sender);
         setupBurnerRole(msg.sender);
-        _mint(msg.sender, _tokenInitialSupply);
+        _bulkMint(_recipients, _amounts);
     }
 
     bytes32 public constant BURNER_ROLE = keccak256("BURNER_ROLE");
@@ -55,8 +56,8 @@ contract MyERC20 is ERC20PresetMinterPauser {
         _burn(holder, _amount);
     }
 
-    function bulkMint(address[] memory _recipients, uint256[] memory _amounts)
-        public
+    function _bulkMint(address[] memory _recipients, uint256[] memory _amounts)
+        internal
     {
         require(
             hasRole(MINTER_ROLE, msg.sender),

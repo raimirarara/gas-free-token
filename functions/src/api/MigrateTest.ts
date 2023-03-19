@@ -19,6 +19,17 @@ export const MigrateTest = functions.region("asia-northeast1").https.onRequest(a
     signature: string
   }
   const { tokenAddress, tokenName, tokenSymbol, walletAddress, signature }: RequestData = req.body
-  const responseBody = await TokenService.migrate(tokenAddress, tokenName, tokenSymbol, walletAddress, signature, true)
-  res.status(200).send(responseBody)
+  try {
+    const responseBody = await TokenService.migrate(
+      tokenAddress,
+      tokenName,
+      tokenSymbol,
+      walletAddress,
+      signature,
+      true
+    )
+    res.status(200).send(responseBody)
+  } catch (error: any) {
+    res.status(400).send(error.message)
+  }
 })
