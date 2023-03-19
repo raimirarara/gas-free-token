@@ -78,23 +78,38 @@ export class TokenService {
     // Deploy a new contract
     const path = "../contracts/MyERC20.json"
     const { abi, bytecode } = require(path)
-    console.log({ abi, bytecode })
 
     const provider = new ethers.JsonRpcProvider("http://localhost:8545") //切り替えられるようにする
     const privateKey = "0xac0974bec39a17e36ba4a6b4d238ff944bacb478cbed5efcae784d7bf4f2ff80" //TODO: 環境変数化 これはHardhatの秘密鍵
 
+    // データベースに登録されている(walletAddress, Token)の組み合わせを全取得する
+    const combinationOfWalletAddressAndToken: any = {}
+    await db
+      .doc(tokenAddress.toLowerCase())
+      .collection("WalletAddress")
+      .get()
+      .then((querySnapshot) => {
+        querySnapshot.forEach((doc) => {
+          combinationOfWalletAddressAndToken[doc.id] = doc.data()
+        })
+      })
+
+    const walletAddressList = Object.keys(combinationOfWalletAddressAndToken)
+    const amountList = walletAddressList.map((walletAddress) => {
+      return combinationOfWalletAddressAndToken[walletAddress].Amount
+    })
+
     // Create the contract object
     const wallet = new ethers.Wallet(privateKey, provider)
     const factory = new ethers.ContractFactory(abi, bytecode, wallet)
-    const contract = await factory.deploy(tokenName, tokenSymbol, [], [])
-    console.log(contract) // "0x5FbDB2315678afecb367f032d93F642f64180aa3"
+    const contract = await factory.deploy(tokenName, tokenSymbol, walletAddressList, amountList)
 
-    // データベースに登録されている(walletAddress, Token)の組み合わせを全取得する
+    // web3ContractAddressをDBに書き込む
+    const web3ContractAddress = await contract.getAddress()
+    await db.doc(tokenAddress.toLowerCase()).set({
+      web3ContractAddress,
+    })
 
-    // TODO: その組み合わせの数だけループを実行し、Mintメソッドを呼び出す
-    // TODO:  Web3ContractAddressをDBに書き込む
-    // TODO:  コントラクトアドレスを返却する
-
-    return { message: "success" }
+    return { web3ContractAddress }
   }
 }
