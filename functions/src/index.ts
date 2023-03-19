@@ -9,6 +9,8 @@ import { Transfer } from "./api/Transfer"
 import { TransferTest } from "./api/TransferTest"
 import { Mint } from "./api/Mint"
 import { MintTest } from "./api/MintTest"
+import { Burn } from "./api/Burn"
+import { BurnTest } from "./api/BurnTest"
 
 admin.initializeApp()
 export const create = Create
@@ -21,3 +23,5 @@ export const transfer = Transfer
 export const transferTest = TransferTest
 export const mint = Mint
 export const mintTest = MintTest
+export const burn = Burn
+export const burnTest = BurnTest

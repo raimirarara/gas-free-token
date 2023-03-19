@@ -189,6 +189,50 @@ export class TokenService {
     return { message: "Mint operation successful" }
   }
 
+  static async burn(
+    tokenAddress: string,
+    from: string,
+    amount: number,
+    walletAddress: string,
+    signature: string,
+    testMode: boolean = false
+  ) {
+    // Check if the token has already been migrated to another contract
+    const migratedTokenAddress = await this.getDB(testMode).doc(tokenAddress).get()
+    const data = migratedTokenAddress.data()
+    if (data?.Web3ContractAddress) {
+      throw new Error(`This token is already migrated into ${data.Web3ContractAddress}`)
+    }
+    // Verify the signature
+    if (!testMode) this.verifySignature(walletAddress, signature)
+
+    // Check if the owner address matches the signer address
+    const ownerAddress = await this.getOwnerAddress(tokenAddress, testMode)
+
+    if (walletAddress.toLowerCase() !== ownerAddress) {
+      throw new Error("Authentication error: You are not allowed to execute this method.")
+    }
+
+    // Verify that the "from" address exists in the database
+    const fromRef = this.getDB(testMode).doc(tokenAddress).collection("balances").doc(from.toLowerCase())
+    const fromDoc = await fromRef.get()
+    if (!fromDoc.exists) {
+      throw new Error("NotFound error: The requested 'from' address could not be found in the database.")
+    }
+
+    // Verify that the "from" address has enough tokens to burn
+    const fromBalance = fromDoc.data()?.amount || 0
+    if (amount > fromBalance) {
+      throw new Error("Error: Insufficient balance. You do not have enough tokens to complete this transaction.")
+    }
+
+    // Update the balance of the "from" address
+    await fromRef.update({
+      amount: FieldValue.increment(-amount),
+    })
+    return { message: "Successfully burned tokens." }
+  }
+
   static async getTokenData(
     tokenAddress: string,
     db: admin.firestore.CollectionReference<admin.firestore.DocumentData>
