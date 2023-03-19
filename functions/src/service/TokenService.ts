@@ -58,61 +58,93 @@ export class TokenService {
     signature: string,
     testMode: boolean = false
   ) {
-    // Verify the signature
     if (!testMode) this.verifySignature(walletAddress, signature)
 
-    // Get the owner address from Firestore
     const db = this.getDB(testMode)
+    const tokenData = await this.getTokenData(tokenAddress, db)
+
+    this.validateOwnership(walletAddress, tokenData)
+
+    const { abi, bytecode } = await this.getContractData()
+    const provider = this.getProvider()
+    const privateKey = process.env.PRIVATE_KEY || "0xac0974bec39a17e36ba4a6b4d238ff944bacb478cbed5efcae784d7bf4f2ff80"
+
+    const { walletAddressList, amountList } = await this.getWalletAddressAndAmounts(tokenAddress, db)
+
+    const wallet = new ethers.Wallet(privateKey, provider)
+    const factory = new ethers.ContractFactory(abi, bytecode, wallet)
+    const contract = await factory.deploy(tokenName, tokenSymbol, walletAddressList, amountList)
+
+    const web3ContractAddress = await contract.getAddress()
+    await this.updateWeb3ContractAddress(tokenAddress, web3ContractAddress, db)
+
+    return { web3ContractAddress }
+  }
+
+  static async getTokenData(
+    tokenAddress: string,
+    db: admin.firestore.CollectionReference<admin.firestore.DocumentData>
+  ) {
     const tokenDoc = await db.doc(tokenAddress.toLowerCase()).get()
     const tokenData = tokenDoc.data()
+
     if (!tokenData) {
-      throw new Error(`Authentication error: You are not allowed to execute this method.`)
+      throw new Error("Authentication error: You are not allowed to execute this method.")
     }
+
+    return tokenData
+  }
+
+  static validateOwnership(walletAddress: string, tokenData: admin.firestore.DocumentData) {
     const ownerAddress = tokenData.OwnerAddress
-    if (ownerAddress !== walletAddress.toLowerCase()) {
-      throw new Error(`Authentication error: You are not allowed to execute this method.`)
+
+    if (ownerAddress !== walletAddress.toLowerCase() || tokenData.web3ContractAddress) {
+      throw new Error("Authentication error: You are not allowed to execute this method.")
     }
+  }
 
-    //  Web3ContractAddressに値が入っていたら以下のエラーメッセージを返却
-    if (tokenData.web3ContractAddress) {
-      throw new Error(`Authentication error: You are not allowed to execute this method.`)
-    }
+  static async getContractData() {
+    const contracts = require("../contracts/MyERC20.json")
+    const { abi, bytecode } = contracts
+    return { abi, bytecode }
+  }
 
-    // Deploy a new contract
-    const path = "../contracts/MyERC20.json"
-    const { abi, bytecode } = require(path)
+  static getProvider() {
+    const providerUrl = process.env.PROVIDER_URL || "http://localhost:8545"
+    return new ethers.JsonRpcProvider(providerUrl)
+  }
 
-    const provider = new ethers.JsonRpcProvider("http://localhost:8545") //切り替えられるようにする
-    const privateKey = "0xac0974bec39a17e36ba4a6b4d238ff944bacb478cbed5efcae784d7bf4f2ff80" //TODO: 環境変数化 これはHardhatの秘密鍵
+  static async getWalletAddressAndAmounts(
+    tokenAddress: string,
+    db: admin.firestore.CollectionReference<admin.firestore.DocumentData>
+  ) {
+    const addressData: any = {}
 
-    // データベースに登録されている(walletAddress, Token)の組み合わせを全取得する
-    const combinationOfWalletAddressAndToken: any = {}
     await db
       .doc(tokenAddress.toLowerCase())
       .collection("WalletAddress")
       .get()
       .then((querySnapshot) => {
         querySnapshot.forEach((doc) => {
-          combinationOfWalletAddressAndToken[doc.id] = doc.data()
+          addressData[doc.id] = doc.data()
         })
       })
 
-    const walletAddressList = Object.keys(combinationOfWalletAddressAndToken)
+    const walletAddressList = Object.keys(addressData)
     const amountList = walletAddressList.map((walletAddress) => {
-      return combinationOfWalletAddressAndToken[walletAddress].Amount
+      return addressData[walletAddress].Amount
     })
 
-    // Create the contract object
-    const wallet = new ethers.Wallet(privateKey, provider)
-    const factory = new ethers.ContractFactory(abi, bytecode, wallet)
-    const contract = await factory.deploy(tokenName, tokenSymbol, walletAddressList, amountList)
+    return { walletAddressList, amountList }
+  }
 
-    // web3ContractAddressをDBに書き込む
-    const web3ContractAddress = await contract.getAddress()
+  static async updateWeb3ContractAddress(
+    tokenAddress: string,
+    web3ContractAddress: string,
+    db: admin.firestore.CollectionReference<admin.firestore.DocumentData>
+  ) {
     await db.doc(tokenAddress.toLowerCase()).set({
       web3ContractAddress,
     })
-
-    return { web3ContractAddress }
   }
 }
