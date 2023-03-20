@@ -2,15 +2,21 @@
 sidebar_position: 1
 ---
 
-# Tutorial Intro
+# Overview
 
-Let's discover **Docusaurus in less than 5 minutes**.
+Have you ever faced these problems when issuing tokens?
 
-## Getting Started
+- **No knowledge of blockchain**
+- **Gas costs**
+- **Processing is slow**
 
-Get started by **creating a new site**.
+It costs a lot of gas and is clearly over-engineered to handle tokens that have no value yet on web3. It is like keeping your children's banknotes in a vault.
 
-Or **try Docusaurus immediately** with **[docusaurus.new](https://docusaurus.new)**.
+## Gas Free Token
+
+Gas Free Token is a token that can be used without the need to pay for gas.
+
+Gas Free Token is a temporary Token that is used on web2. Later, when the token starts to gain value, it can be transferred to web3.
 
 ### What you'll need
 
