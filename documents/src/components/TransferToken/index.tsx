@@ -11,7 +11,7 @@ import { ToAddressAtom } from "@site/src/atoms/ToAddressAtom"
 import BalanceOfTokenListButton from "../BalanceOfTokenList"
 import { FromAddressAtom } from "@site/src/atoms/FromAddressAtom"
 
-export default function TransferTokenButton() {
+export default function TransferToken() {
   const [tokenAddress, setTokenAddress] = useAtom(TokenAddressAtom)
   const [walletAddress, setWalletAddress] = useAtom(WalletAddressAtom)
   const [to, setTo] = useAtom(ToAddressAtom)

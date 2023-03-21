@@ -7,7 +7,7 @@ import { getAccount } from "@site/src/utils/getAccount"
 import { getSignature } from "@site/src/utils/getSignature"
 import { BaseUrl } from "@site/src/constants/BaseUrl"
 
-export default function BalanceOfTokenListButton() {
+export default function BalanceOfTokenList() {
   const [tokenAddress, setTokenAddress] = useAtom(TokenAddressAtom)
   const [walletAddress, setWalletAddress] = useAtom(WalletAddressAtom)
   const [token, setToken] = useState(null)

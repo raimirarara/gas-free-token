@@ -6,14 +6,15 @@ import { WalletAddressAtom } from "@site/src/atoms/WalletAddressAtom"
 import { getAccount } from "@site/src/utils/getAccount"
 import { getSignature } from "@site/src/utils/getSignature"
 import { BaseUrl } from "@site/src/constants/BaseUrl"
-import { FromAddressAtom } from "@site/src/atoms/FromAddressAtom"
+import BalanceOfTokenButton from "../BalanceOfToken"
+import { ToAddressAtom } from "@site/src/atoms/ToAddressAtom"
 import { isAddress } from "ethers"
 import BalanceOfTokenListButton from "../BalanceOfTokenList"
 
-export default function BurnToken() {
+export default function MigrateToken() {
   const [tokenAddress, setTokenAddress] = useAtom(TokenAddressAtom)
   const [walletAddress, setWalletAddress] = useAtom(WalletAddressAtom)
-  const [from, setFrom] = useAtom(FromAddressAtom)
+  const [to, setTo] = useAtom(ToAddressAtom)
   const [error, setError] = useState("")
   const [amount, setAmount] = useState(0)
 
@@ -24,7 +25,7 @@ export default function BurnToken() {
 
   function onChangeWalletAddress(walletAddress: string) {
     setError("")
-    setFrom(walletAddress)
+    setTo(walletAddress)
   }
 
   function onBlur(to: string) {
@@ -36,7 +37,7 @@ export default function BurnToken() {
   function setYourWallet() {
     if (walletAddress) {
       setError("")
-      setFrom(walletAddress)
+      setTo(walletAddress)
     } else {
       setError("Please go back and start over from the Create Token page.")
     }
@@ -46,7 +47,7 @@ export default function BurnToken() {
     setAmount(amount)
   }
 
-  async function burnToken() {
+  async function mintToken() {
     if (!isMetaMaskInstalled) return alert("Please install metamask")
 
     const address = await getAccount()
@@ -57,7 +58,7 @@ export default function BurnToken() {
 
     if (!walletAddress || !tokenAddress) return alert("Please create your Token")
 
-    const url = BaseUrl + "/burn"
+    const url = BaseUrl + "/mint"
     const response = await fetch(url, {
       method: "POST",
       headers: {
@@ -65,15 +66,15 @@ export default function BurnToken() {
       },
       body: JSON.stringify({
         tokenAddress: tokenAddress,
-        from: walletAddress,
+        to: to,
         amount: Number(amount),
         walletAddress: walletAddress,
         signature: sign,
       }),
     })
 
-    const responseBody = await response.json()
-    console.log(responseBody)
+    // const responseBody = await response.json()
+    // console.log("responseBody: ", responseBody)
   }
 
   return (
@@ -83,9 +84,9 @@ export default function BurnToken() {
         my={"md"}
         label="Mint to WalletAddress"
         placeholder="0x000..."
-        value={from}
+        value={to}
         onChange={(e) => onChangeWalletAddress(e.target.value)}
-        onBlur={() => onBlur(from)}
+        onBlur={() => onBlur(to)}
         error={error}
         required
       />
@@ -111,8 +112,8 @@ export default function BurnToken() {
         onChange={(e: number) => onChangeAmount(e)}
         step={100}
       />
-      <Button my={"md"} onClick={() => burnToken()}>
-        Burn your Token
+      <Button my={"md"} onClick={() => mintToken()}>
+        Mint your Token
       </Button>
       <BalanceOfTokenListButton />
     </Container>

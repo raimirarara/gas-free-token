@@ -11,7 +11,7 @@ import { ToAddressAtom } from "@site/src/atoms/ToAddressAtom"
 import { isAddress } from "ethers"
 import BalanceOfTokenListButton from "../BalanceOfTokenList"
 
-export default function MintTokenButton() {
+export default function MintToken() {
   const [tokenAddress, setTokenAddress] = useAtom(TokenAddressAtom)
   const [walletAddress, setWalletAddress] = useAtom(WalletAddressAtom)
   const [to, setTo] = useAtom(ToAddressAtom)

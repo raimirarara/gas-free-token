@@ -7,7 +7,7 @@ import { getAccount } from "@site/src/utils/getAccount"
 import { getSignature } from "@site/src/utils/getSignature"
 import { BaseUrl } from "@site/src/constants/BaseUrl"
 
-export default function CreateTokenButton() {
+export default function CreateToken() {
   const [tokenAddress, setTokenAddress] = useAtom(TokenAddressAtom)
   const [walletAddress, setWalletAddress] = useAtom(WalletAddressAtom)
 
