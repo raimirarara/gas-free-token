@@ -6,7 +6,7 @@ import { WalletAddressAtom } from "@site/src/atoms/WalletAddressAtom"
 import { getAccount } from "@site/src/utils/getAccount"
 import { getSignature } from "@site/src/utils/getSignature"
 import { BaseUrl } from "@site/src/constants/BaseUrl"
-import BalanceOfTokenButton from "../BalanceOfTokenButton"
+import BalanceOfTokenButton from "../BalanceOfToken"
 import { ethers, isAddress } from "ethers"
 import { ToAddressAtom } from "@site/src/atoms/ToAddressAtom"
 

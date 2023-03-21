@@ -6,11 +6,16 @@ import { WalletAddressAtom } from "@site/src/atoms/WalletAddressAtom"
 import { getAccount } from "@site/src/utils/getAccount"
 import { getSignature } from "@site/src/utils/getSignature"
 import { BaseUrl } from "@site/src/constants/BaseUrl"
-import BalanceOfTokenButton from "../BalanceOfTokenButton"
+import BalanceOfTokenButton from "../BalanceOfToken"
+import { ToAddressAtom } from "@site/src/atoms/ToAddressAtom"
+import { isAddress } from "ethers"
+import BalanceOfTokenListButton from "../BalanceOfTokenList"
 
-export default function BurnTokenButton() {
+export default function MintTokenButton() {
   const [tokenAddress, setTokenAddress] = useAtom(TokenAddressAtom)
   const [walletAddress, setWalletAddress] = useAtom(WalletAddressAtom)
+  const [to, setTo] = useAtom(ToAddressAtom)
+  const [error, setError] = useState("")
   const [amount, setAmount] = useState(0)
 
   const isMetaMaskInstalled = () => {
@@ -18,11 +23,31 @@ export default function BurnTokenButton() {
     return Boolean(ethereum && ethereum.isMetaMask)
   }
 
+  function onChangeWalletAddress(walletAddress: string) {
+    setError("")
+    setTo(walletAddress)
+  }
+
+  function onBlur(to: string) {
+    if (!isAddress(to)) {
+      setError("Invalid wallet address'")
+    }
+  }
+
+  function setYourWallet() {
+    if (walletAddress) {
+      setError("")
+      setTo(walletAddress)
+    } else {
+      setError("Please go back and start over from the Create Token page.")
+    }
+  }
+
   function onChangeAmount(amount: number) {
     setAmount(amount)
   }
 
-  async function burnToken() {
+  async function mintToken() {
     if (!isMetaMaskInstalled) return alert("Please install metamask")
 
     const address = await getAccount()
@@ -33,7 +58,7 @@ export default function BurnTokenButton() {
 
     if (!walletAddress || !tokenAddress) return alert("Please create your Token")
 
-    const url = BaseUrl + "/burn"
+    const url = BaseUrl + "/mint"
     const response = await fetch(url, {
       method: "POST",
       headers: {
@@ -41,15 +66,15 @@ export default function BurnTokenButton() {
       },
       body: JSON.stringify({
         tokenAddress: tokenAddress,
-        from: walletAddress,
+        to: to,
         amount: Number(amount),
         walletAddress: walletAddress,
         signature: sign,
       }),
     })
 
-    const responseBody = await response.json()
-    console.log(responseBody)
+    // const responseBody = await response.json()
+    // console.log("responseBody: ", responseBody)
   }
 
   return (
@@ -57,17 +82,24 @@ export default function BurnTokenButton() {
       <TextInput
         size={"md"}
         my={"md"}
-        label={"Your WalletAddress"}
-        value={walletAddress}
-        disabled={!walletAddress}
-        readOnly
+        label="Mint to WalletAddress"
+        placeholder="0x000..."
+        value={to}
+        onChange={(e) => onChangeWalletAddress(e.target.value)}
+        onBlur={() => onBlur(to)}
+        error={error}
+        required
       />
+
+      <Button size="sm" my={6} onClick={() => setYourWallet()}>
+        Set your WalletAddress
+      </Button>
       <TextInput
         size={"md"}
         my={"md"}
-        label={"Your TokenAddress"}
+        label="Your Token Address (created earlier)"
         value={tokenAddress}
-        disabled={!tokenAddress}
+        disabled={true}
         readOnly
       />
       <NumberInput
@@ -80,11 +112,10 @@ export default function BurnTokenButton() {
         onChange={(e: number) => onChangeAmount(e)}
         step={100}
       />
-      <Button my={8} onClick={() => burnToken()}>
-        Burn your Token
+      <Button my={"md"} onClick={() => mintToken()}>
+        Mint your Token
       </Button>
-
-      <BalanceOfTokenButton />
+      <BalanceOfTokenListButton />
     </Container>
   )
 }
