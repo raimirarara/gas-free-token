@@ -6,14 +6,16 @@ import { WalletAddressAtom } from "@site/src/atoms/WalletAddressAtom"
 import { getAccount } from "@site/src/utils/getAccount"
 import { getSignature } from "@site/src/utils/getSignature"
 import { BaseUrl } from "@site/src/constants/BaseUrl"
-import BalanceOfTokenButton from "../BalanceOfToken"
 import { ethers, isAddress } from "ethers"
 import { ToAddressAtom } from "@site/src/atoms/ToAddressAtom"
+import BalanceOfTokenListButton from "../BalanceOfTokenList"
+import { FromAddressAtom } from "@site/src/atoms/FromAddressAtom"
 
 export default function TransferTokenButton() {
   const [tokenAddress, setTokenAddress] = useAtom(TokenAddressAtom)
   const [walletAddress, setWalletAddress] = useAtom(WalletAddressAtom)
   const [to, setTo] = useAtom(ToAddressAtom)
+  const [from, setFrom] = useAtom(FromAddressAtom)
   const [error, setError] = useState("")
   const [amount, setAmount] = useState(0)
 
@@ -27,7 +29,21 @@ export default function TransferTokenButton() {
     setTo(ethers.Wallet.createRandom().address)
   }
 
-  function onChangeWalletAddress(walletAddress: string) {
+  function setYourWallet() {
+    if (walletAddress) {
+      setError("")
+      setFrom(walletAddress)
+    } else {
+      setError("Please go back and start over from the Create Token page.")
+    }
+  }
+
+  function onChangeSenderWalletAddress(walletAddress: string) {
+    setError("")
+    setFrom(walletAddress)
+  }
+
+  function onChangeRecipientWalletAddress(walletAddress: string) {
     setError("")
     setTo(walletAddress)
   }
@@ -82,7 +98,20 @@ export default function TransferTokenButton() {
 
   return (
     <Container>
-      <TextInput size={"md"} my={"md"} label={"Your WalletAddress"} value={walletAddress} />
+      <TextInput
+        size={"md"}
+        my={"md"}
+        label="Sender WalletAddress"
+        placeholder="0x000..."
+        value={from}
+        onChange={(e) => onChangeSenderWalletAddress(e.target.value)}
+        onBlur={() => onBlur(to)}
+        error={error}
+        required
+      />
+      <Button size="sm" onClick={() => setYourWallet()}>
+        Set your WalletAddress
+      </Button>
       <TextInput
         size={"md"}
         my={"md"}
@@ -96,27 +125,29 @@ export default function TransferTokenButton() {
         label="Recipient walletAddress"
         placeholder="0x000..."
         value={to}
-        onChange={(e) => onChangeWalletAddress(e.target.value)}
+        onChange={(e) => onChangeRecipientWalletAddress(e.target.value)}
         onBlur={() => onBlur(to)}
         error={error}
         required
       />
       <Button size="sm" my={"md"} onClick={() => setRandomWallet()}>
-        Set Random walletAddress
+        Set random WalletAddress
       </Button>
       <NumberInput
         required
         size="lg"
-        my={"md"}
+        mt={"md"}
         min={0}
         label="amount"
         value={amount}
         onChange={(e: number) => onChangeAmount(e)}
         step={100}
       />
-      <Button onClick={() => transferToken()}>Send your Token</Button>
+      <Button my={"md"} onClick={() => transferToken()}>
+        Send your Token
+      </Button>
 
-      <BalanceOfTokenButton />
+      <BalanceOfTokenListButton />
     </Container>
   )
 }

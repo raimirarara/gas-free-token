@@ -6,16 +6,40 @@ import { WalletAddressAtom } from "@site/src/atoms/WalletAddressAtom"
 import { getAccount } from "@site/src/utils/getAccount"
 import { getSignature } from "@site/src/utils/getSignature"
 import { BaseUrl } from "@site/src/constants/BaseUrl"
-import BalanceOfTokenButton from "../BalanceOfToken"
+import { FromAddressAtom } from "@site/src/atoms/FromAddressAtom"
+import { isAddress } from "ethers"
+import BalanceOfTokenListButton from "../BalanceOfTokenList"
 
 export default function BurnTokenButton() {
   const [tokenAddress, setTokenAddress] = useAtom(TokenAddressAtom)
   const [walletAddress, setWalletAddress] = useAtom(WalletAddressAtom)
+  const [from, setFrom] = useAtom(FromAddressAtom)
+  const [error, setError] = useState("")
   const [amount, setAmount] = useState(0)
 
   const isMetaMaskInstalled = () => {
     const { ethereum } = window as any
     return Boolean(ethereum && ethereum.isMetaMask)
+  }
+
+  function onChangeWalletAddress(walletAddress: string) {
+    setError("")
+    setFrom(walletAddress)
+  }
+
+  function onBlur(to: string) {
+    if (!isAddress(to)) {
+      setError("Invalid wallet address'")
+    }
+  }
+
+  function setYourWallet() {
+    if (walletAddress) {
+      setError("")
+      setFrom(walletAddress)
+    } else {
+      setError("Please go back and start over from the Create Token page.")
+    }
   }
 
   function onChangeAmount(amount: number) {
@@ -57,34 +81,40 @@ export default function BurnTokenButton() {
       <TextInput
         size={"md"}
         my={"md"}
-        label={"Your WalletAddress"}
-        value={walletAddress}
-        disabled={!walletAddress}
-        readOnly
+        label="Mint to WalletAddress"
+        placeholder="0x000..."
+        value={from}
+        onChange={(e) => onChangeWalletAddress(e.target.value)}
+        onBlur={() => onBlur(from)}
+        error={error}
+        required
       />
+
+      <Button size="sm" onClick={() => setYourWallet()}>
+        Set your WalletAddress
+      </Button>
       <TextInput
         size={"md"}
         my={"md"}
-        label={"Your TokenAddress"}
+        label="Your Token Address (created earlier)"
         value={tokenAddress}
-        disabled={!tokenAddress}
+        disabled={true}
         readOnly
       />
       <NumberInput
         required
         size="lg"
-        my={"md"}
+        mt={"md"}
         min={0}
         label="amount"
         value={amount}
         onChange={(e: number) => onChangeAmount(e)}
         step={100}
       />
-      <Button my={8} onClick={() => burnToken()}>
+      <Button my={"md"} onClick={() => burnToken()}>
         Burn your Token
       </Button>
-
-      <BalanceOfTokenButton />
+      <BalanceOfTokenListButton />
     </Container>
   )
 }

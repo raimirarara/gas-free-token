@@ -91,7 +91,7 @@ export default function MintTokenButton() {
         required
       />
 
-      <Button size="sm" my={6} onClick={() => setYourWallet()}>
+      <Button size="sm" onClick={() => setYourWallet()}>
         Set your WalletAddress
       </Button>
       <TextInput
@@ -105,7 +105,7 @@ export default function MintTokenButton() {
       <NumberInput
         required
         size="lg"
-        my={"md"}
+        mt={"md"}
         min={0}
         label="amount"
         value={amount}

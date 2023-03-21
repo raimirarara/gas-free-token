@@ -52,7 +52,9 @@ export default function BalanceOfTokenListButton() {
 
   return (
     <div>
-      <Button onClick={() => balanceOfTokenList()}>Get your Token Balance Info</Button>
+      <Button mt={"md"} onClick={() => balanceOfTokenList()}>
+        Get your Token Balance Info
+      </Button>
       {balancesList && (
         <Table withColumnBorders my={"md"}>
           <thead>
