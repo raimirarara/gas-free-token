@@ -175,6 +175,11 @@ export class TokenService {
       throw new Error("Authentication error: You are not allowed to execute this method.")
     }
 
+    // Check if the amount > 0
+    if (amount < 0) {
+      throw new Error("Error: Invalid amount. Value must be greater than or equal to 0.")
+    }
+
     // Check if the recipient exists
     const recipientRef = this.getDB(testMode).doc(tokenAddress).collection("balances").doc(to.toLowerCase())
     const recipientDoc = await recipientRef.get()
@@ -211,6 +216,11 @@ export class TokenService {
 
     if (walletAddress.toLowerCase() !== ownerAddress) {
       throw new Error("Authentication error: You are not allowed to execute this method.")
+    }
+
+    // Check if the amount > 0
+    if (amount < 0) {
+      throw new Error("Error: Invalid amount. Value must be greater than or equal to 0.")
     }
 
     // Verify that the "from" address exists in the database
