@@ -11,6 +11,8 @@ import { Mint } from "./api/Mint"
 import { MintTest } from "./api/MintTest"
 import { Burn } from "./api/Burn"
 import { BurnTest } from "./api/BurnTest"
+import { BalanceOfList } from "./api/BalanceOfList"
+import { BalanceOfListTest } from "./api/BalanceOfListTest"
 
 admin.initializeApp()
 export const create = Create
@@ -25,3 +27,5 @@ export const mint = Mint
 export const mintTest = MintTest
 export const burn = Burn
 export const burnTest = BurnTest
+export const balanceOfList = BalanceOfList
+export const balanceOfListTest = BalanceOfListTest

@@ -1,4 +1,4 @@
-import { Button, Container, NumberInput, Text } from "@mantine/core"
+import { Button, Container, NumberInput, Text, TextInput } from "@mantine/core"
 import React, { useState } from "react"
 import { useAtom } from "jotai"
 import { TokenAddressAtom } from "@site/src/atoms/TokenAddressAtom"
@@ -54,23 +54,36 @@ export default function BurnTokenButton() {
 
   return (
     <Container>
+      <TextInput
+        size={"md"}
+        my={"md"}
+        label={"Your WalletAddress"}
+        value={walletAddress}
+        disabled={!walletAddress}
+        readOnly
+      />
+      <TextInput
+        size={"md"}
+        my={"md"}
+        label={"Your TokenAddress"}
+        value={tokenAddress}
+        disabled={!tokenAddress}
+        readOnly
+      />
       <NumberInput
         required
-        size="md"
-        my={6}
+        size="lg"
+        my={"md"}
         min={0}
         label="amount"
         value={amount}
         onChange={(e: number) => onChangeAmount(e)}
         step={100}
       />
-      <Button onClick={() => burnToken()}>Burn your Token</Button>
-      {walletAddress && <Text>Your WalletAddress : {walletAddress}</Text>}
-      {tokenAddress ? (
-        <Text>Your TokenAddress : {tokenAddress}</Text>
-      ) : (
-        <Text color="red">Please create your Token</Text>
-      )}
+      <Button my={8} onClick={() => burnToken()}>
+        Burn your Token
+      </Button>
+
       <BalanceOfTokenButton />
     </Container>
   )

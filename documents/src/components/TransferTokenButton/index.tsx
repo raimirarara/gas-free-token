@@ -54,42 +54,60 @@ export default function TransferTokenButton() {
     if (!walletAddress || !tokenAddress) return alert("Please create your Token")
 
     const url = BaseUrl + "/transfer"
-    const response = await fetch(url, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        tokenAddress: tokenAddress,
-        to: to,
-        amount: Number(amount),
-        walletAddress: walletAddress,
-        signature: sign,
-      }),
-    })
+    try {
+      const response = await fetch(url, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          tokenAddress: tokenAddress,
+          to: to,
+          amount: Number(amount),
+          walletAddress: walletAddress,
+          signature: sign,
+        }),
+      })
 
-    const responseBody = await response.json()
-    console.log(responseBody)
+      if (!response.ok) {
+        console.log(response)
+      }
+
+      const data = await response.json()
+      console.log(data)
+    } catch (error) {
+      console.error(error)
+    }
   }
 
   return (
     <Container>
+      <TextInput size={"md"} my={"md"} label={"Your WalletAddress"} value={walletAddress} />
       <TextInput
+        size={"md"}
+        my={"md"}
+        label="Your Token Address (created earlier)"
+        value={tokenAddress}
+        disabled={true}
+        readOnly
+      />
+      <TextInput
+        size="lg"
         label="Recipient walletAddress"
-        placeholder="Enter recipient walletAddress"
+        placeholder="0x000..."
         value={to}
         onChange={(e) => onChangeWalletAddress(e.target.value)}
         onBlur={() => onBlur(to)}
         error={error}
         required
       />
-      <Button size="sm" my={6} onClick={() => setRandomWallet()}>
+      <Button size="sm" my={"md"} onClick={() => setRandomWallet()}>
         Set Random walletAddress
       </Button>
       <NumberInput
         required
-        size="md"
-        my={6}
+        size="lg"
+        my={"md"}
         min={0}
         label="amount"
         value={amount}
@@ -97,12 +115,7 @@ export default function TransferTokenButton() {
         step={100}
       />
       <Button onClick={() => transferToken()}>Send your Token</Button>
-      {walletAddress && <Text>Your WalletAddress : {walletAddress}</Text>}
-      {tokenAddress ? (
-        <Text>Your TokenAddress : {tokenAddress}</Text>
-      ) : (
-        <Text color="red">Please create your Token</Text>
-      )}
+
       <BalanceOfTokenButton />
     </Container>
   )

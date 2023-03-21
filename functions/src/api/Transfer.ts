@@ -23,6 +23,6 @@ export const Transfer = functions.https.onRequest(async (req, res) => {
     const responseBody = await TokenService.transfer(tokenAddress, to, amount, walletAddress, signature)
     res.status(200).send(responseBody)
   } catch (error: any) {
-    res.status(400).send(error.message)
+    res.status(400).send({ message: error.message })
   }
 })

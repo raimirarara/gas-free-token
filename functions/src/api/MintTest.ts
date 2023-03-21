@@ -23,6 +23,6 @@ export const MintTest = functions.https.onRequest(async (req, res) => {
     const responseBody = await TokenService.mint(tokenAddress, to, amount, walletAddress, signature, true)
     res.status(200).send(responseBody)
   } catch (error: any) {
-    res.status(400).send(error.message)
+    res.status(400).send({ message: error.message })
   }
 })

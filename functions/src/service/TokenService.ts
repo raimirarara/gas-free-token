@@ -11,7 +11,6 @@ interface TokenInfo {
 export class TokenService {
   private static TopCollectionName = "contract"
   private static TopCollectionNameTestMode = "contract-test"
-  private static walletAddressName = "walletAddress"
 
   private static getDB(testMode: boolean) {
     const firestore = admin.firestore()
@@ -243,6 +242,21 @@ export class TokenService {
     return { message: "Successfully burned tokens." }
   }
 
+  static async balanceOfList(tokenAddress: string, testMode: boolean = false) {
+    // Check if the token has already been migrated to another contract
+    const migratedTokenAddress = await this.getDB(testMode).doc(tokenAddress).get()
+    const data = migratedTokenAddress.data()
+    if (data?.Web3ContractAddress) {
+      throw new Error(`This token is already migrated into ${data.Web3ContractAddress}`)
+    }
+
+    const db = this.getDB(testMode)
+
+    const { walletAddressList, amountList } = await this.getWalletAddressAndAmounts(tokenAddress, db)
+
+    return { walletAddressList, amountList }
+  }
+
   static async getTokenData(
     tokenAddress: string,
     db: admin.firestore.CollectionReference<admin.firestore.DocumentData>
@@ -283,7 +297,7 @@ export class TokenService {
 
     await db
       .doc(tokenAddress.toLowerCase())
-      .collection(this.walletAddressName)
+      .collection("balances")
       .get()
       .then((querySnapshot) => {
         querySnapshot.forEach((doc) => {

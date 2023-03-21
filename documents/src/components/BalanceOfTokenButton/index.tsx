@@ -30,9 +30,9 @@ export default function BalanceOfTokenButton() {
   }
 
   return (
-    <>
+    <div>
       <Button onClick={() => balanceOfToken()}>Get your Balance Info</Button>
       {token && <Text>Your Balance : {token}</Text>}
-    </>
+    </div>
   )
 }

@@ -30,6 +30,6 @@ export const MigrateTest = functions.https.onRequest(async (req, res) => {
     )
     res.status(200).send(responseBody)
   } catch (error: any) {
-    res.status(400).send(error.message)
+    res.status(400).send({ message: error.message })
   }
 })

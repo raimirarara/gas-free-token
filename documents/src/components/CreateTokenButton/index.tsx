@@ -1,4 +1,4 @@
-import { Button, Container, Text } from "@mantine/core"
+import { Button, Container, Text, TextInput } from "@mantine/core"
 import React from "react"
 import { useAtom } from "jotai"
 import { TokenAddressAtom } from "@site/src/atoms/TokenAddressAtom"
@@ -46,8 +46,22 @@ export default function CreateTokenButton() {
   return (
     <Container>
       <Button onClick={() => createToken()}>Create your Token</Button>
-      {walletAddress && <Text>Your WalletAddress : {walletAddress}</Text>}
-      {tokenAddress && <Text>Your TokenAddress : {tokenAddress}</Text>}
+      <TextInput
+        size={"lg"}
+        my={"md"}
+        label={"Your WalletAddress"}
+        value={walletAddress}
+        disabled={!walletAddress}
+        readOnly
+      />
+      <TextInput
+        size={"lg"}
+        my={"md"}
+        label={"Your TokenAddress"}
+        value={tokenAddress}
+        disabled={!tokenAddress}
+        readOnly
+      />
     </Container>
   )
 }

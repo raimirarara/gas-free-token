@@ -20,6 +20,6 @@ export const CreateTest = functions.https.onRequest(async (req, res) => {
     const responseBody = await TokenService.create(walletAddress, signature, true)
     res.status(200).send(responseBody)
   } catch (error: any) {
-    res.status(400).send(error.message)
+    res.status(400).send({ message: error.message })
   }
 })
