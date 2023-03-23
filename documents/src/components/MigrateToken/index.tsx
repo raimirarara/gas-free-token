@@ -55,7 +55,7 @@ export default function MigrateToken() {
 
   return (
     <Container>
-      <TextInput size={"md"} my={"md"} label="Your WalletAddress" value={walletAddress} disabled={true} readOnly />
+      <TextInput size={"md"} label="Your WalletAddress" value={walletAddress} disabled={true} readOnly />
       <TextInput
         size={"md"}
         my={"md"}
@@ -65,8 +65,8 @@ export default function MigrateToken() {
         readOnly
       />
       <TextInput
-        size={"md"}
-        my={"md"}
+        size={"lg"}
+        mb={"xs"}
         label="Token Name"
         placeholder="ethereum"
         value={tokenName}
@@ -74,17 +74,15 @@ export default function MigrateToken() {
         required
       />
       <TextInput
-        size={"md"}
-        my={"md"}
+        size={"lg"}
+        mb={"xs"}
         label="Token Symbol"
         placeholder="ETH"
         value={tokenSymbol}
         onChange={(e) => setTokenSymbol(e.target.value)}
         required
       />
-      <Button my={"md"} onClick={() => migrateToken()}>
-        Migrate your Token
-      </Button>
+      <Button onClick={() => migrateToken()}>Migrate your Token</Button>
     </Container>
   )
 }

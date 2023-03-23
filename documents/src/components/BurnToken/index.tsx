@@ -84,8 +84,8 @@ export default function BurnToken() {
     <Container>
       <TextInput
         size={"md"}
-        my={"md"}
-        label="Mint to WalletAddress"
+        mb={"xs"}
+        label="WalletAddress to burn your token"
         placeholder="0x000..."
         value={from}
         onChange={(e) => onChangeWalletAddress(e.target.value)}
@@ -108,16 +108,14 @@ export default function BurnToken() {
       <NumberInput
         required
         size="lg"
-        mt={"md"}
+        mb={"xs"}
         min={0}
         label="amount"
         value={amount}
         onChange={(e: number) => onChangeAmount(e)}
         step={100}
       />
-      <Button my={"md"} onClick={() => burnToken()}>
-        Burn your Token
-      </Button>
+      <Button onClick={() => burnToken()}>Burn your Token</Button>
       <BalanceOfTokenList isResOk={isResOk} />
     </Container>
   )

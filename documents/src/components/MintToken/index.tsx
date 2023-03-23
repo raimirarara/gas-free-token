@@ -88,7 +88,7 @@ export default function MintToken() {
       <TextInput
         size={"md"}
         mb="xs"
-        label="Mint to WalletAddress"
+        label="WalletAddress to mint your token"
         placeholder="0x000..."
         value={to}
         onChange={(e) => onChangeWalletAddress(e.target.value)}
@@ -111,7 +111,6 @@ export default function MintToken() {
       <NumberInput
         required
         size="lg"
-        mt={"md"}
         mb={"xs"}
         min={0}
         label="amount"
