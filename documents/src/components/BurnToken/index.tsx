@@ -1,4 +1,4 @@
-import { Anchor, Button, Container, NumberInput, TextInput } from "@mantine/core"
+import { Anchor, Button, Container, Flex, NumberInput, TextInput } from "@mantine/core"
 import React, { useState } from "react"
 import { useAtom } from "jotai"
 import { TokenAddressAtom } from "@site/src/atoms/TokenAddressAtom"
@@ -81,6 +81,22 @@ export default function BurnToken() {
 
   return (
     <Container>
+      {tokenAddress ? (
+        <TextInput
+          size={"md"}
+          my={"md"}
+          label="Your Token Address (created earlier)"
+          value={tokenAddress}
+          disabled={true}
+          readOnly
+        />
+      ) : (
+        <Flex my={"md"}>
+          <Anchor size={"lg"} color="red" href={"/docs/tutorial-basics/create-token"}>
+            {"Please go back and start over from the Create Token page."}
+          </Anchor>
+        </Flex>
+      )}
       <TextInput
         size={"md"}
         label="WalletAddress to burn your token"
@@ -95,18 +111,10 @@ export default function BurnToken() {
       <Anchor component="button" onClick={() => setYourWallet()}>
         Set your WalletAddress
       </Anchor>
-      <TextInput
-        size={"md"}
-        my={"md"}
-        label="Your Token Address (created earlier)"
-        value={tokenAddress}
-        disabled={true}
-        readOnly
-      />
       <NumberInput
         required
         size="lg"
-        mb={"xs"}
+        my={"xs"}
         min={0}
         label="amount"
         value={amount}

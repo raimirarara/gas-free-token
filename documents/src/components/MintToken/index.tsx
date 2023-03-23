@@ -1,4 +1,4 @@
-import { Anchor, Button, Container, NavLink, NumberInput, Text, TextInput } from "@mantine/core"
+import { Anchor, Box, Button, Center, Container, Flex, NavLink, NumberInput, Text, TextInput } from "@mantine/core"
 import React, { useState } from "react"
 import { useAtom } from "jotai"
 import { TokenAddressAtom } from "@site/src/atoms/TokenAddressAtom"
@@ -16,6 +16,8 @@ export default function MintToken() {
   const [error, setError] = useState("")
   const [amount, setAmount] = useState(0)
   const [isResOk, setIsResOk] = useState(false)
+
+  const [reqError, setReqError] = useState("")
 
   let response: Response
 
@@ -57,7 +59,7 @@ export default function MintToken() {
 
     const sign = await getSignature(address)
 
-    if (!walletAddress || !tokenAddress) return alert("Please create your Token")
+    if (!walletAddress || !tokenAddress) return setError("Please go back and start over from the Create Token page.")
 
     const url = BaseUrl + "/mint"
     const response = await fetch(url, {
@@ -84,6 +86,22 @@ export default function MintToken() {
 
   return (
     <Container>
+      {tokenAddress ? (
+        <TextInput
+          size={"md"}
+          my={"md"}
+          label="Your Token Address (created earlier)"
+          value={tokenAddress}
+          disabled={true}
+          readOnly
+        />
+      ) : (
+        <Flex my={"md"}>
+          <Anchor size={"lg"} color="red" href={"/docs/tutorial-basics/create-token"}>
+            {"Please go back and start over from the Create Token page."}
+          </Anchor>
+        </Flex>
+      )}
       <TextInput
         size={"md"}
         label="WalletAddress to mint your token"
@@ -97,18 +115,10 @@ export default function MintToken() {
       <Anchor component="button" onClick={() => setYourWallet()}>
         Set your WalletAddress
       </Anchor>
-      <TextInput
-        size={"md"}
-        my={"md"}
-        label="Your Token Address (created earlier)"
-        value={tokenAddress}
-        disabled={true}
-        readOnly
-      />
       <NumberInput
         required
         size="lg"
-        mb={"xs"}
+        my={"xs"}
         min={0}
         label="amount"
         value={amount}

@@ -1,4 +1,4 @@
-import { Button, Container, TextInput } from "@mantine/core"
+import { Anchor, Button, Container, Flex, TextInput } from "@mantine/core"
 import React, { useState } from "react"
 import { useAtom } from "jotai"
 import { TokenAddressAtom } from "@site/src/atoms/TokenAddressAtom"
@@ -53,17 +53,27 @@ export default function MigrateToken() {
 
   return (
     <Container>
+      {tokenAddress ? (
+        <TextInput
+          size={"md"}
+          my={"md"}
+          label="Your Token Address (created earlier)"
+          value={tokenAddress}
+          disabled={true}
+          readOnly
+        />
+      ) : (
+        <Flex my={"md"}>
+          <Anchor size={"lg"} color="red" href={"/docs/tutorial-basics/create-token"}>
+            {"Please go back and start over from the Create Token page."}
+          </Anchor>
+        </Flex>
+      )}
       <TextInput size={"md"} label="Your WalletAddress" value={walletAddress} disabled={true} readOnly />
-      <TextInput
-        size={"md"}
-        my={"md"}
-        label="Your TokenAddress (created earlier)"
-        value={tokenAddress}
-        disabled={true}
-        readOnly
-      />
+
       <TextInput
         size={"lg"}
+        mt={"md"}
         mb={"xs"}
         label="Token Name"
         placeholder="ethereum"
@@ -73,7 +83,7 @@ export default function MigrateToken() {
       />
       <TextInput
         size={"lg"}
-        mb={"xs"}
+        my={"xs"}
         label="Token Symbol"
         placeholder="ETH"
         value={tokenSymbol}

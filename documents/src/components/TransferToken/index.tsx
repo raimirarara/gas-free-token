@@ -1,4 +1,4 @@
-import { Anchor, Button, Container, Input, NumberInput, Text, TextInput } from "@mantine/core"
+import { Anchor, Button, Container, Flex, Input, NumberInput, Text, TextInput } from "@mantine/core"
 import React, { useEffect, useState } from "react"
 import { useAtom } from "jotai"
 import { TokenAddressAtom } from "@site/src/atoms/TokenAddressAtom"
@@ -100,6 +100,22 @@ export default function TransferToken() {
 
   return (
     <Container>
+      {tokenAddress ? (
+        <TextInput
+          size={"md"}
+          my={"md"}
+          label="Your Token Address (created earlier)"
+          value={tokenAddress}
+          disabled={true}
+          readOnly
+        />
+      ) : (
+        <Flex my={"md"}>
+          <Anchor size={"lg"} color="red" href={"/docs/tutorial-basics/create-token"}>
+            {"Please go back and start over from the Create Token page."}
+          </Anchor>
+        </Flex>
+      )}
       <TextInput
         size={"md"}
         label="Sender WalletAddress"
@@ -114,16 +130,8 @@ export default function TransferToken() {
         Set your WalletAddress
       </Anchor>
       <TextInput
-        size={"md"}
-        my={"md"}
-        label="Your Token Address (created earlier)"
-        value={tokenAddress}
-        disabled={true}
-        readOnly
-      />
-      <TextInput
-        size="lg"
-        mb={"xs"}
+        size="md"
+        mt={"xs"}
         label="Recipient walletAddress"
         placeholder="0x000..."
         value={to}
@@ -132,14 +140,13 @@ export default function TransferToken() {
         error={recipientError}
         required
       />
-      <Button size="sm" onClick={() => setRandomWallet()}>
+      <Anchor component="button" onClick={() => setRandomWallet()}>
         Set random WalletAddress
-      </Button>
+      </Anchor>
       <NumberInput
         required
         size="lg"
-        mt={"md"}
-        mb={"xs"}
+        my={"xs"}
         min={0}
         label="amount"
         value={amount}
