@@ -19,8 +19,6 @@ export default function MintToken() {
 
   const [reqError, setReqError] = useState("")
 
-  let response: Response
-
   const isMetaMaskInstalled = () => {
     const { ethereum } = window as any
     return Boolean(ethereum && ethereum.isMetaMask)
@@ -51,6 +49,8 @@ export default function MintToken() {
   }
 
   async function mintToken() {
+    setReqError("")
+
     if (!isMetaMaskInstalled) return alert("Please install metamask")
 
     const address = await getAccount()
@@ -126,6 +126,11 @@ export default function MintToken() {
         step={100}
       />
       <Button onClick={() => mintToken()}>Mint your Token</Button>
+      {reqError && (
+        <Text size={"md"} color="red">
+          {reqError}
+        </Text>
+      )}
       <BalanceOfTokenList isResOk={isResOk} setIsResOk={setIsResOk} />
     </Container>
   )

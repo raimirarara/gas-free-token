@@ -1,4 +1,4 @@
-import { Anchor, Button, Container, Flex, NumberInput, TextInput } from "@mantine/core"
+import { Anchor, Button, Container, Flex, NumberInput, Text, TextInput } from "@mantine/core"
 import React, { useState } from "react"
 import { useAtom } from "jotai"
 import { TokenAddressAtom } from "@site/src/atoms/TokenAddressAtom"
@@ -16,6 +16,8 @@ export default function BurnToken() {
   const [error, setError] = useState("")
   const [amount, setAmount] = useState(0)
   const [isResOk, setIsResOk] = useState(false)
+
+  const [reqError, setReqError] = useState("")
 
   const isMetaMaskInstalled = () => {
     const { ethereum } = window as any
@@ -47,6 +49,8 @@ export default function BurnToken() {
   }
 
   async function burnToken() {
+    setReqError("")
+
     if (!isMetaMaskInstalled) return alert("Please install metamask")
 
     const address = await getAccount()
@@ -122,6 +126,13 @@ export default function BurnToken() {
         step={100}
       />
       <Button onClick={() => burnToken()}>Burn your Token</Button>
+
+      {reqError && (
+        <Text size={"md"} color="red">
+          {reqError}
+        </Text>
+      )}
+
       <BalanceOfTokenList isResOk={isResOk} setIsResOk={setIsResOk} />
     </Container>
   )

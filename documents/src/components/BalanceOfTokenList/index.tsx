@@ -1,4 +1,4 @@
-import { Button, Container, NumberInput, Table, Text } from "@mantine/core"
+import { Anchor, Button, Container, NumberInput, Table, Text } from "@mantine/core"
 import React, { useCallback, useEffect, useState } from "react"
 import { useAtom } from "jotai"
 import { TokenAddressAtom } from "@site/src/atoms/TokenAddressAtom"
@@ -76,6 +76,9 @@ export default function BalanceOfTokenList(props: Props) {
           <tbody>{rows}</tbody>
         </Table>
       )}
+      <Anchor component="button" onClick={() => balanceOfTokenList()}>
+        Get balances List
+      </Anchor>
     </div>
   )
 }

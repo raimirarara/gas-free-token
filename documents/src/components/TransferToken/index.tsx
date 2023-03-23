@@ -19,7 +19,7 @@ export default function TransferToken() {
   const [amount, setAmount] = useState(0)
   const [isResOk, setIsResOk] = useState(false)
 
-  let response: Response
+  const [reqError, setReqError] = useState("")
 
   const isMetaMaskInstalled = () => {
     const { ethereum } = window as any
@@ -65,6 +65,8 @@ export default function TransferToken() {
   }
 
   async function transferToken() {
+    setReqError("")
+
     if (!isMetaMaskInstalled) return alert("Please install metamask")
 
     const address = await getAccount()
@@ -76,7 +78,7 @@ export default function TransferToken() {
     if (!walletAddress || !tokenAddress) return alert("Please create your Token")
 
     const url = BaseUrl + "/transfer"
-    response = await fetch(url, {
+    const response = await fetch(url, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -92,10 +94,10 @@ export default function TransferToken() {
 
     if (response.ok) {
       setIsResOk(true)
+    } else {
+      const errMag = await response.json()
+      setReqError(errMag.message)
     }
-
-    // const data = await response.json()
-    // console.log(data)
   }
 
   return (
@@ -154,7 +156,11 @@ export default function TransferToken() {
         step={100}
       />
       <Button onClick={() => transferToken()}>Send your Token</Button>
-
+      {reqError && (
+        <Text size={"md"} color="red">
+          {reqError}
+        </Text>
+      )}
       <BalanceOfTokenList isResOk={isResOk} setIsResOk={setIsResOk} />
     </Container>
   )

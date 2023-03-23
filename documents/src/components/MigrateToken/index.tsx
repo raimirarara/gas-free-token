@@ -1,4 +1,4 @@
-import { Anchor, Button, Container, Flex, TextInput } from "@mantine/core"
+import { Anchor, Button, Container, Flex, Text, TextInput } from "@mantine/core"
 import React, { useState } from "react"
 import { useAtom } from "jotai"
 import { TokenAddressAtom } from "@site/src/atoms/TokenAddressAtom"
@@ -14,12 +14,16 @@ export default function MigrateToken() {
   const [tokenSymbol, setTokenSymbol] = useState("")
   const [web3ContractAddress, setWeb3ContractAddress] = useState("")
 
+  const [reqError, setReqError] = useState("")
+
   const isMetaMaskInstalled = () => {
     const { ethereum } = window as any
     return Boolean(ethereum && ethereum.isMetaMask)
   }
 
   async function migrateToken() {
+    setReqError("")
+
     if (!isMetaMaskInstalled) return alert("Please install metamask")
 
     const address = await getAccount()
@@ -91,6 +95,12 @@ export default function MigrateToken() {
         required
       />
       <Button onClick={() => migrateToken()}>Migrate your Token</Button>
+
+      {reqError && (
+        <Text size={"md"} color="red">
+          {reqError}
+        </Text>
+      )}
 
       <TextInput
         size={"lg"}
