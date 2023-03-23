@@ -1,4 +1,4 @@
-import { Button, Container, Input, NumberInput, Text, TextInput } from "@mantine/core"
+import { Anchor, Button, Container, Input, NumberInput, Text, TextInput } from "@mantine/core"
 import React, { useEffect, useState } from "react"
 import { useAtom } from "jotai"
 import { TokenAddressAtom } from "@site/src/atoms/TokenAddressAtom"
@@ -16,7 +16,8 @@ export default function TransferToken() {
   const [walletAddress, setWalletAddress] = useAtom(WalletAddressAtom)
   const [to, setTo] = useAtom(ToAddressAtom)
   const [from, setFrom] = useAtom(FromAddressAtom)
-  const [error, setError] = useState("")
+  const [senderError, setSenderError] = useState("")
+  const [recipientError, setRecipientError] = useState("")
   const [amount, setAmount] = useState(0)
   const [isResOk, setIsResOk] = useState(false)
 
@@ -27,33 +28,37 @@ export default function TransferToken() {
     return Boolean(ethereum && ethereum.isMetaMask)
   }
 
-  function setRandomWallet() {
-    setError("")
-    setTo(ethers.Wallet.createRandom().address)
-  }
-
   function setYourWallet() {
     if (walletAddress) {
-      setError("")
+      setSenderError("")
       setFrom(walletAddress)
     } else {
-      setError("Please go back and start over from the Create Token page.")
+      setSenderError("Please go back and start over from the Create Token page.")
     }
   }
 
   function onChangeSenderWalletAddress(walletAddress: string) {
-    setError("")
+    setSenderError("")
     setFrom(walletAddress)
   }
 
+  function setRandomWallet() {
+    setRecipientError("")
+    setTo(ethers.Wallet.createRandom().address)
+  }
+
   function onChangeRecipientWalletAddress(walletAddress: string) {
-    setError("")
+    setRecipientError("")
     setTo(walletAddress)
   }
 
-  function onBlur(to: string) {
-    if (!isAddress(to)) {
-      setError("Invalid wallet address'")
+  function onBlur(walletAddress: string, isSender: boolean) {
+    if (!isAddress(walletAddress)) {
+      if (isSender) {
+        setSenderError("Invalid wallet address'")
+      } else {
+        setRecipientError("Invalid wallet address'")
+      }
     }
   }
 
@@ -99,18 +104,17 @@ export default function TransferToken() {
     <Container>
       <TextInput
         size={"md"}
-        mb={"xs"}
         label="Sender WalletAddress"
         placeholder="0x000..."
         value={from}
         onChange={(e) => onChangeSenderWalletAddress(e.target.value)}
-        onBlur={() => onBlur(to)}
-        error={error}
+        onBlur={() => onBlur(from, true)}
+        error={senderError}
         required
       />
-      <Button size="sm" onClick={() => setYourWallet()}>
+      <Anchor component="button" onClick={() => setYourWallet()}>
         Set your WalletAddress
-      </Button>
+      </Anchor>
       <TextInput
         size={"md"}
         my={"md"}
@@ -126,8 +130,8 @@ export default function TransferToken() {
         placeholder="0x000..."
         value={to}
         onChange={(e) => onChangeRecipientWalletAddress(e.target.value)}
-        onBlur={() => onBlur(to)}
-        error={error}
+        onBlur={() => onBlur(to, false)}
+        error={recipientError}
         required
       />
       <Button size="sm" onClick={() => setRandomWallet()}>

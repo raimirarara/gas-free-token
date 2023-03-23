@@ -1,4 +1,4 @@
-import { Button, Container, NumberInput, Text, TextInput } from "@mantine/core"
+import { Anchor, Button, Container, NumberInput, Text, TextInput } from "@mantine/core"
 import React, { useState } from "react"
 import { useAtom } from "jotai"
 import { TokenAddressAtom } from "@site/src/atoms/TokenAddressAtom"
@@ -84,7 +84,6 @@ export default function BurnToken() {
     <Container>
       <TextInput
         size={"md"}
-        mb={"xs"}
         label="WalletAddress to burn your token"
         placeholder="0x000..."
         value={from}
@@ -94,9 +93,9 @@ export default function BurnToken() {
         required
       />
 
-      <Button size="sm" onClick={() => setYourWallet()}>
+      <Anchor component="button" onClick={() => setYourWallet()}>
         Set your WalletAddress
-      </Button>
+      </Anchor>
       <TextInput
         size={"md"}
         my={"md"}

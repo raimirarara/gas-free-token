@@ -1,4 +1,4 @@
-import { Button, Container, NumberInput, Text, TextInput } from "@mantine/core"
+import { Anchor, Button, Container, NavLink, NumberInput, Text, TextInput } from "@mantine/core"
 import React, { useState } from "react"
 import { useAtom } from "jotai"
 import { TokenAddressAtom } from "@site/src/atoms/TokenAddressAtom"
@@ -87,7 +87,6 @@ export default function MintToken() {
     <Container>
       <TextInput
         size={"md"}
-        mb="xs"
         label="WalletAddress to mint your token"
         placeholder="0x000..."
         value={to}
@@ -96,10 +95,9 @@ export default function MintToken() {
         error={error}
         required
       />
-
-      <Button size="sm" onClick={() => setYourWallet()}>
+      <Anchor component="button" onClick={() => setYourWallet()}>
         Set your WalletAddress
-      </Button>
+      </Anchor>
       <TextInput
         size={"md"}
         my={"md"}
