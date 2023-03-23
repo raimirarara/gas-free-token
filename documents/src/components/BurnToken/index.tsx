@@ -1,4 +1,4 @@
-import { Anchor, Button, Container, NumberInput, Text, TextInput } from "@mantine/core"
+import { Anchor, Button, Container, NumberInput, TextInput } from "@mantine/core"
 import React, { useState } from "react"
 import { useAtom } from "jotai"
 import { TokenAddressAtom } from "@site/src/atoms/TokenAddressAtom"
@@ -6,14 +6,13 @@ import { WalletAddressAtom } from "@site/src/atoms/WalletAddressAtom"
 import { getAccount } from "@site/src/utils/getAccount"
 import { getSignature } from "@site/src/utils/getSignature"
 import { BaseUrl } from "@site/src/constants/BaseUrl"
-import { FromAddressAtom } from "@site/src/atoms/FromAddressAtom"
 import { isAddress } from "ethers"
 import BalanceOfTokenList from "../BalanceOfTokenList"
 
 export default function BurnToken() {
   const [tokenAddress, setTokenAddress] = useAtom(TokenAddressAtom)
   const [walletAddress, setWalletAddress] = useAtom(WalletAddressAtom)
-  const [from, setFrom] = useAtom(FromAddressAtom)
+  const [from, setFrom] = useState("")
   const [error, setError] = useState("")
   const [amount, setAmount] = useState(0)
   const [isResOk, setIsResOk] = useState(false)
