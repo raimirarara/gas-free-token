@@ -9,6 +9,7 @@ import { BaseUrl } from "@site/src/constants/BaseUrl"
 
 type Props = {
   isResOk: boolean
+  setIsResOk: React.Dispatch<React.SetStateAction<boolean>>
 }
 
 export default function BalanceOfTokenList(props: Props) {
@@ -21,6 +22,7 @@ export default function BalanceOfTokenList(props: Props) {
     console.log("res: ", props.isResOk)
     if (props.isResOk) {
       balanceOfTokenList()
+      props.setIsResOk(false)
     }
   }, [props.isResOk])
 

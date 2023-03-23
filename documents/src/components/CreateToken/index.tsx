@@ -6,7 +6,6 @@ import { WalletAddressAtom } from "@site/src/atoms/WalletAddressAtom"
 import { getAccount } from "@site/src/utils/getAccount"
 import { getSignature } from "@site/src/utils/getSignature"
 import { BaseUrl } from "@site/src/constants/BaseUrl"
-import { isAddress } from "ethers"
 
 export default function CreateToken() {
   const [tokenAddress, setTokenAddress] = useAtom(TokenAddressAtom)
@@ -17,17 +16,6 @@ export default function CreateToken() {
   const isMetaMaskInstalled = () => {
     const { ethereum } = window as any
     return Boolean(ethereum && ethereum.isMetaMask)
-  }
-
-  function onChangeWalletAddress(walletAddress: string) {
-    setError("")
-    setWalletAddress(walletAddress)
-  }
-
-  function onBlur(walletAddress: string) {
-    if (!isAddress(walletAddress)) {
-      setError("Invalid wallet address'")
-    }
   }
 
   async function createToken() {
@@ -51,7 +39,7 @@ export default function CreateToken() {
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
-          walletAddress: address,
+          walletAddress: walletAddress || address,
           signature: sign,
         }),
       })
@@ -66,15 +54,14 @@ export default function CreateToken() {
   return (
     <Container>
       <Button onClick={() => createToken()}>Create your Token</Button>
+      {error && <Text color="red">{error}</Text>}
       <TextInput
         size={"lg"}
         my={"md"}
         label="Your WalletAddress"
         placeholder="0x000..."
         value={walletAddress}
-        onChange={(e) => onChangeWalletAddress(e.target.value)}
-        onBlur={() => onBlur(walletAddress)}
-        error={error}
+        disabled={!walletAddress}
         required
       />
       <TextInput

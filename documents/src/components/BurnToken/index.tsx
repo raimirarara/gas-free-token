@@ -115,7 +115,7 @@ export default function BurnToken() {
         step={100}
       />
       <Button onClick={() => burnToken()}>Burn your Token</Button>
-      <BalanceOfTokenList isResOk={isResOk} />
+      <BalanceOfTokenList isResOk={isResOk} setIsResOk={setIsResOk} />
     </Container>
   )
 }

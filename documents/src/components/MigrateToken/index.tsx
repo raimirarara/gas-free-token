@@ -1,4 +1,4 @@
-import { Button, Container, NumberInput, Text, TextInput } from "@mantine/core"
+import { Button, Container, TextInput } from "@mantine/core"
 import React, { useState } from "react"
 import { useAtom } from "jotai"
 import { TokenAddressAtom } from "@site/src/atoms/TokenAddressAtom"
@@ -6,10 +6,6 @@ import { WalletAddressAtom } from "@site/src/atoms/WalletAddressAtom"
 import { getAccount } from "@site/src/utils/getAccount"
 import { getSignature } from "@site/src/utils/getSignature"
 import { BaseUrl } from "@site/src/constants/BaseUrl"
-import BalanceOfTokenButton from "../BalanceOfToken"
-import { ToAddressAtom } from "@site/src/atoms/ToAddressAtom"
-import { isAddress } from "ethers"
-import BalanceOfTokenListButton from "../BalanceOfTokenList"
 
 export default function MigrateToken() {
   const [tokenAddress, setTokenAddress] = useAtom(TokenAddressAtom)

@@ -6,14 +6,13 @@ import { WalletAddressAtom } from "@site/src/atoms/WalletAddressAtom"
 import { getAccount } from "@site/src/utils/getAccount"
 import { getSignature } from "@site/src/utils/getSignature"
 import { BaseUrl } from "@site/src/constants/BaseUrl"
-import { ToAddressAtom } from "@site/src/atoms/ToAddressAtom"
 import { isAddress } from "ethers"
 import BalanceOfTokenList from "../BalanceOfTokenList"
 
 export default function MintToken() {
   const [tokenAddress, setTokenAddress] = useAtom(TokenAddressAtom)
   const [walletAddress, setWalletAddress] = useAtom(WalletAddressAtom)
-  const [to, setTo] = useAtom(ToAddressAtom)
+  const [to, setTo] = useState("")
   const [error, setError] = useState("")
   const [amount, setAmount] = useState(0)
   const [isResOk, setIsResOk] = useState(false)
@@ -117,7 +116,7 @@ export default function MintToken() {
         step={100}
       />
       <Button onClick={() => mintToken()}>Mint your Token</Button>
-      <BalanceOfTokenList isResOk={isResOk} />
+      <BalanceOfTokenList isResOk={isResOk} setIsResOk={setIsResOk} />
     </Container>
   )
 }

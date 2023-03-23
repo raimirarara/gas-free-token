@@ -7,15 +7,13 @@ import { getAccount } from "@site/src/utils/getAccount"
 import { getSignature } from "@site/src/utils/getSignature"
 import { BaseUrl } from "@site/src/constants/BaseUrl"
 import { ethers, isAddress } from "ethers"
-import { ToAddressAtom } from "@site/src/atoms/ToAddressAtom"
 import BalanceOfTokenList from "../BalanceOfTokenList"
-import { FromAddressAtom } from "@site/src/atoms/FromAddressAtom"
 
 export default function TransferToken() {
   const [tokenAddress, setTokenAddress] = useAtom(TokenAddressAtom)
   const [walletAddress, setWalletAddress] = useAtom(WalletAddressAtom)
-  const [to, setTo] = useAtom(ToAddressAtom)
-  const [from, setFrom] = useAtom(FromAddressAtom)
+  const [to, setTo] = useState("")
+  const [from, setFrom] = useState("")
   const [senderError, setSenderError] = useState("")
   const [recipientError, setRecipientError] = useState("")
   const [amount, setAmount] = useState(0)
@@ -150,7 +148,7 @@ export default function TransferToken() {
       />
       <Button onClick={() => transferToken()}>Send your Token</Button>
 
-      <BalanceOfTokenList isResOk={isResOk} />
+      <BalanceOfTokenList isResOk={isResOk} setIsResOk={setIsResOk} />
     </Container>
   )
 }
