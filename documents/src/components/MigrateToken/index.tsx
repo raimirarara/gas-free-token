@@ -85,9 +85,10 @@ export default function MigrateToken() {
       <TextInput
         size={"lg"}
         mt={"md"}
-        label="web3ContractAddress"
+        label="ContractAddress of your token on web3"
         value={web3ContractAddress}
         onChange={(e) => setTokenSymbol(e.target.value)}
+        disabled={!web3ContractAddress}
       />
     </Container>
   )
