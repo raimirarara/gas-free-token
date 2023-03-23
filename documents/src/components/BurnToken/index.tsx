@@ -8,7 +8,7 @@ import { getSignature } from "@site/src/utils/getSignature"
 import { BaseUrl } from "@site/src/constants/BaseUrl"
 import { FromAddressAtom } from "@site/src/atoms/FromAddressAtom"
 import { isAddress } from "ethers"
-import BalanceOfTokenListButton from "../BalanceOfTokenList"
+import BalanceOfTokenList from "../BalanceOfTokenList"
 
 export default function BurnToken() {
   const [tokenAddress, setTokenAddress] = useAtom(TokenAddressAtom)
@@ -16,6 +16,7 @@ export default function BurnToken() {
   const [from, setFrom] = useAtom(FromAddressAtom)
   const [error, setError] = useState("")
   const [amount, setAmount] = useState(0)
+  const [isResOk, setIsResOk] = useState(false)
 
   const isMetaMaskInstalled = () => {
     const { ethereum } = window as any
@@ -51,7 +52,7 @@ export default function BurnToken() {
 
     const address = await getAccount()
 
-    setWalletAddress(address || "Not able to get accounts")
+    setWalletAddress(address)
 
     const sign = await getSignature(address)
 
@@ -72,8 +73,11 @@ export default function BurnToken() {
       }),
     })
 
+    if (response.ok) {
+      setIsResOk(true)
+    }
+
     const responseBody = await response.json()
-    console.log(responseBody)
   }
 
   return (
@@ -114,7 +118,7 @@ export default function BurnToken() {
       <Button my={"md"} onClick={() => burnToken()}>
         Burn your Token
       </Button>
-      <BalanceOfTokenListButton />
+      <BalanceOfTokenList isResOk={isResOk} />
     </Container>
   )
 }

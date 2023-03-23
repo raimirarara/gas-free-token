@@ -1,5 +1,5 @@
 import { Button, Container, NumberInput, Table, Text } from "@mantine/core"
-import React, { useEffect, useState } from "react"
+import React, { useCallback, useEffect, useState } from "react"
 import { useAtom } from "jotai"
 import { TokenAddressAtom } from "@site/src/atoms/TokenAddressAtom"
 import { WalletAddressAtom } from "@site/src/atoms/WalletAddressAtom"
@@ -7,11 +7,22 @@ import { getAccount } from "@site/src/utils/getAccount"
 import { getSignature } from "@site/src/utils/getSignature"
 import { BaseUrl } from "@site/src/constants/BaseUrl"
 
-export default function BalanceOfTokenList() {
+type Props = {
+  isResOk: boolean
+}
+
+export default function BalanceOfTokenList(props: Props) {
   const [tokenAddress, setTokenAddress] = useAtom(TokenAddressAtom)
   const [walletAddress, setWalletAddress] = useAtom(WalletAddressAtom)
   const [token, setToken] = useState(null)
   const [balancesList, setBalancesList] = useState([])
+
+  useEffect(() => {
+    console.log("res: ", props.isResOk)
+    if (props.isResOk) {
+      balanceOfTokenList()
+    }
+  }, [props.isResOk])
 
   async function balanceOfTokenList() {
     const url = BaseUrl + "/balanceOfList"
@@ -52,9 +63,6 @@ export default function BalanceOfTokenList() {
 
   return (
     <div>
-      <Button mt={"md"} onClick={() => balanceOfTokenList()}>
-        Get your Token Balance Info
-      </Button>
       {balancesList && (
         <Table withColumnBorders my={"md"}>
           <thead>

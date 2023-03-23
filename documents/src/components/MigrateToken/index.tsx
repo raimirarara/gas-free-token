@@ -14,51 +14,27 @@ import BalanceOfTokenListButton from "../BalanceOfTokenList"
 export default function MigrateToken() {
   const [tokenAddress, setTokenAddress] = useAtom(TokenAddressAtom)
   const [walletAddress, setWalletAddress] = useAtom(WalletAddressAtom)
-  const [to, setTo] = useAtom(ToAddressAtom)
-  const [error, setError] = useState("")
-  const [amount, setAmount] = useState(0)
+  const [tokenName, setTokenName] = useState("")
+  const [tokenSymbol, setTokenSymbol] = useState("")
 
   const isMetaMaskInstalled = () => {
     const { ethereum } = window as any
     return Boolean(ethereum && ethereum.isMetaMask)
   }
 
-  function onChangeWalletAddress(walletAddress: string) {
-    setError("")
-    setTo(walletAddress)
-  }
-
-  function onBlur(to: string) {
-    if (!isAddress(to)) {
-      setError("Invalid wallet address'")
-    }
-  }
-
-  function setYourWallet() {
-    if (walletAddress) {
-      setError("")
-      setTo(walletAddress)
-    } else {
-      setError("Please go back and start over from the Create Token page.")
-    }
-  }
-
-  function onChangeAmount(amount: number) {
-    setAmount(amount)
-  }
-
-  async function mintToken() {
+  async function migrateToken() {
     if (!isMetaMaskInstalled) return alert("Please install metamask")
 
     const address = await getAccount()
 
-    setWalletAddress(address || "Not able to get accounts")
+    setWalletAddress(address)
 
     const sign = await getSignature(address)
 
     if (!walletAddress || !tokenAddress) return alert("Please create your Token")
+    if (!tokenName || !tokenSymbol) return alert("Please enter Token Name and Token Symbol")
 
-    const url = BaseUrl + "/mint"
+    const url = BaseUrl + "/migrate"
     const response = await fetch(url, {
       method: "POST",
       headers: {
@@ -66,56 +42,49 @@ export default function MigrateToken() {
       },
       body: JSON.stringify({
         tokenAddress: tokenAddress,
-        to: to,
-        amount: Number(amount),
+        tokenName: tokenName,
+        tokenSymbol: tokenSymbol,
         walletAddress: walletAddress,
         signature: sign,
       }),
     })
 
-    // const responseBody = await response.json()
-    // console.log("responseBody: ", responseBody)
+    const responseBody = await response.json()
+    console.log("responseBody: ", responseBody)
   }
 
   return (
     <Container>
+      <TextInput size={"md"} my={"md"} label="Your WalletAddress" value={walletAddress} disabled={true} readOnly />
       <TextInput
         size={"md"}
         my={"md"}
-        label="Mint to WalletAddress"
-        placeholder="0x000..."
-        value={to}
-        onChange={(e) => onChangeWalletAddress(e.target.value)}
-        onBlur={() => onBlur(to)}
-        error={error}
-        required
-      />
-
-      <Button size="sm" onClick={() => setYourWallet()}>
-        Set your WalletAddress
-      </Button>
-      <TextInput
-        size={"md"}
-        my={"md"}
-        label="Your Token Address (created earlier)"
+        label="Your TokenAddress (created earlier)"
         value={tokenAddress}
         disabled={true}
         readOnly
       />
-      <NumberInput
+      <TextInput
+        size={"md"}
+        my={"md"}
+        label="Token Name"
+        placeholder="ethereum"
+        value={tokenName}
+        onChange={(e) => setTokenName(e.target.value)}
         required
-        size="lg"
-        mt={"md"}
-        min={0}
-        label="amount"
-        value={amount}
-        onChange={(e: number) => onChangeAmount(e)}
-        step={100}
       />
-      <Button my={"md"} onClick={() => mintToken()}>
-        Mint your Token
+      <TextInput
+        size={"md"}
+        my={"md"}
+        label="Token Symbol"
+        placeholder="ETH"
+        value={tokenSymbol}
+        onChange={(e) => setTokenSymbol(e.target.value)}
+        required
+      />
+      <Button my={"md"} onClick={() => migrateToken()}>
+        Migrate your Token
       </Button>
-      <BalanceOfTokenListButton />
     </Container>
   )
 }

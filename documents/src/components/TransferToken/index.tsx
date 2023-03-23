@@ -8,7 +8,7 @@ import { getSignature } from "@site/src/utils/getSignature"
 import { BaseUrl } from "@site/src/constants/BaseUrl"
 import { ethers, isAddress } from "ethers"
 import { ToAddressAtom } from "@site/src/atoms/ToAddressAtom"
-import BalanceOfTokenListButton from "../BalanceOfTokenList"
+import BalanceOfTokenList from "../BalanceOfTokenList"
 import { FromAddressAtom } from "@site/src/atoms/FromAddressAtom"
 
 export default function TransferToken() {
@@ -18,6 +18,9 @@ export default function TransferToken() {
   const [from, setFrom] = useAtom(FromAddressAtom)
   const [error, setError] = useState("")
   const [amount, setAmount] = useState(0)
+  const [isResOk, setIsResOk] = useState(false)
+
+  let response: Response
 
   const isMetaMaskInstalled = () => {
     const { ethereum } = window as any
@@ -63,44 +66,40 @@ export default function TransferToken() {
 
     const address = await getAccount()
 
-    setWalletAddress(address || "Not able to get accounts")
+    setWalletAddress(address)
 
     const sign = await getSignature(address)
 
     if (!walletAddress || !tokenAddress) return alert("Please create your Token")
 
     const url = BaseUrl + "/transfer"
-    try {
-      const response = await fetch(url, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          tokenAddress: tokenAddress,
-          to: to,
-          amount: Number(amount),
-          walletAddress: walletAddress,
-          signature: sign,
-        }),
-      })
+    response = await fetch(url, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        tokenAddress: tokenAddress,
+        to: to,
+        amount: Number(amount),
+        walletAddress: walletAddress,
+        signature: sign,
+      }),
+    })
 
-      if (!response.ok) {
-        console.log(response)
-      }
-
-      const data = await response.json()
-      console.log(data)
-    } catch (error) {
-      console.error(error)
+    if (response.ok) {
+      setIsResOk(true)
     }
+
+    // const data = await response.json()
+    // console.log(data)
   }
 
   return (
     <Container>
       <TextInput
         size={"md"}
-        my={"md"}
+        mb={"xs"}
         label="Sender WalletAddress"
         placeholder="0x000..."
         value={from}
@@ -122,6 +121,7 @@ export default function TransferToken() {
       />
       <TextInput
         size="lg"
+        mb={"xs"}
         label="Recipient walletAddress"
         placeholder="0x000..."
         value={to}
@@ -130,24 +130,23 @@ export default function TransferToken() {
         error={error}
         required
       />
-      <Button size="sm" my={"md"} onClick={() => setRandomWallet()}>
+      <Button size="sm" onClick={() => setRandomWallet()}>
         Set random WalletAddress
       </Button>
       <NumberInput
         required
         size="lg"
         mt={"md"}
+        mb={"xs"}
         min={0}
         label="amount"
         value={amount}
         onChange={(e: number) => onChangeAmount(e)}
         step={100}
       />
-      <Button my={"md"} onClick={() => transferToken()}>
-        Send your Token
-      </Button>
+      <Button onClick={() => transferToken()}>Send your Token</Button>
 
-      <BalanceOfTokenListButton />
+      <BalanceOfTokenList isResOk={isResOk} />
     </Container>
   )
 }

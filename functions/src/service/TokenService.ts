@@ -285,7 +285,7 @@ export class TokenService {
   }
 
   static getProvider() {
-    const providerUrl = process.env.PROVIDER_URL || "http://localhost:8545"
+    const providerUrl = process.env.PROVIDER_URL || "http://127.0.0.1:8545"
     return new ethers.JsonRpcProvider(providerUrl)
   }
 
@@ -318,9 +318,12 @@ export class TokenService {
     web3ContractAddress: string,
     db: admin.firestore.CollectionReference<admin.firestore.DocumentData>
   ) {
-    await db.doc(tokenAddress.toLowerCase()).set({
-      web3ContractAddress,
-    })
+    await db.doc(tokenAddress.toLowerCase()).set(
+      {
+        web3ContractAddress,
+      },
+      { merge: true }
+    )
   }
 
   static async getTokenBalance(tokenAddress: string, walletAddress: string, testMode: boolean): Promise<number> {

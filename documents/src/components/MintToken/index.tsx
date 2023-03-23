@@ -6,10 +6,9 @@ import { WalletAddressAtom } from "@site/src/atoms/WalletAddressAtom"
 import { getAccount } from "@site/src/utils/getAccount"
 import { getSignature } from "@site/src/utils/getSignature"
 import { BaseUrl } from "@site/src/constants/BaseUrl"
-import BalanceOfTokenButton from "../BalanceOfToken"
 import { ToAddressAtom } from "@site/src/atoms/ToAddressAtom"
 import { isAddress } from "ethers"
-import BalanceOfTokenListButton from "../BalanceOfTokenList"
+import BalanceOfTokenList from "../BalanceOfTokenList"
 
 export default function MintToken() {
   const [tokenAddress, setTokenAddress] = useAtom(TokenAddressAtom)
@@ -17,6 +16,9 @@ export default function MintToken() {
   const [to, setTo] = useAtom(ToAddressAtom)
   const [error, setError] = useState("")
   const [amount, setAmount] = useState(0)
+  const [isResOk, setIsResOk] = useState(false)
+
+  let response: Response
 
   const isMetaMaskInstalled = () => {
     const { ethereum } = window as any
@@ -52,7 +54,7 @@ export default function MintToken() {
 
     const address = await getAccount()
 
-    setWalletAddress(address || "Not able to get accounts")
+    setWalletAddress(address)
 
     const sign = await getSignature(address)
 
@@ -73,6 +75,10 @@ export default function MintToken() {
       }),
     })
 
+    if (response.ok) {
+      setIsResOk(true)
+    }
+
     // const responseBody = await response.json()
     // console.log("responseBody: ", responseBody)
   }
@@ -81,7 +87,7 @@ export default function MintToken() {
     <Container>
       <TextInput
         size={"md"}
-        my={"md"}
+        mb="xs"
         label="Mint to WalletAddress"
         placeholder="0x000..."
         value={to}
@@ -106,16 +112,15 @@ export default function MintToken() {
         required
         size="lg"
         mt={"md"}
+        mb={"xs"}
         min={0}
         label="amount"
         value={amount}
         onChange={(e: number) => onChangeAmount(e)}
         step={100}
       />
-      <Button my={"md"} onClick={() => mintToken()}>
-        Mint your Token
-      </Button>
-      <BalanceOfTokenListButton />
+      <Button onClick={() => mintToken()}>Mint your Token</Button>
+      <BalanceOfTokenList isResOk={isResOk} />
     </Container>
   )
 }

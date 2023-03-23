@@ -1,5 +1,5 @@
 import { Button, Container, Text, TextInput } from "@mantine/core"
-import React from "react"
+import React, { useState } from "react"
 import { useAtom } from "jotai"
 import { TokenAddressAtom } from "@site/src/atoms/TokenAddressAtom"
 import { WalletAddressAtom } from "@site/src/atoms/WalletAddressAtom"
@@ -11,36 +11,44 @@ export default function CreateToken() {
   const [tokenAddress, setTokenAddress] = useAtom(TokenAddressAtom)
   const [walletAddress, setWalletAddress] = useAtom(WalletAddressAtom)
 
+  const [error, setError] = useState("")
+
   const isMetaMaskInstalled = () => {
     const { ethereum } = window as any
     return Boolean(ethereum && ethereum.isMetaMask)
   }
 
   async function createToken() {
+    setError("")
+
     if (!isMetaMaskInstalled) return alert("Please install metamask")
 
-    const address = await getAccount()
+    try {
+      const address = await getAccount()
 
-    setWalletAddress(address || "Not able to get accounts")
+      setWalletAddress(address)
 
-    const sign = await getSignature(address)
+      const sign = await getSignature(address)
 
-    // トークンを作成する
+      // トークンを作成する
 
-    const url = BaseUrl + "/create"
-    const response = await fetch(url, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        walletAddress: address,
-        signature: sign,
-      }),
-    })
+      const url = BaseUrl + "/create"
+      const response = await fetch(url, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          walletAddress: address,
+          signature: sign,
+        }),
+      })
 
-    const responseBody = await response.json()
-    setTokenAddress(responseBody.tokenAddress as string)
+      const responseBody = await response.json()
+      setTokenAddress(responseBody.tokenAddress as string)
+    } catch {
+      setError("Not able to get accounts. Please login metamask!")
+    }
   }
 
   return (
@@ -52,6 +60,7 @@ export default function CreateToken() {
         label={"Your WalletAddress"}
         value={walletAddress}
         disabled={!walletAddress}
+        error={error}
         readOnly
       />
       <TextInput
