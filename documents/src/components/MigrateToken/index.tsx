@@ -16,6 +16,7 @@ export default function MigrateToken() {
   const [walletAddress, setWalletAddress] = useAtom(WalletAddressAtom)
   const [tokenName, setTokenName] = useState("")
   const [tokenSymbol, setTokenSymbol] = useState("")
+  const [web3ContractAddress, setWeb3ContractAddress] = useState("")
 
   const isMetaMaskInstalled = () => {
     const { ethereum } = window as any
@@ -50,7 +51,8 @@ export default function MigrateToken() {
     })
 
     const responseBody = await response.json()
-    console.log("responseBody: ", responseBody)
+
+    setWeb3ContractAddress(responseBody.web3ContractAddress)
   }
 
   return (
@@ -83,6 +85,14 @@ export default function MigrateToken() {
         required
       />
       <Button onClick={() => migrateToken()}>Migrate your Token</Button>
+
+      <TextInput
+        size={"lg"}
+        mt={"md"}
+        label="web3ContractAddress"
+        value={web3ContractAddress}
+        onChange={(e) => setTokenSymbol(e.target.value)}
+      />
     </Container>
   )
 }
