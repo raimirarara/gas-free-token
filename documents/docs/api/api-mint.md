@@ -6,9 +6,9 @@ sidebar_position: 2
 
 ## Endpoint
 
-```
-POST https://us-central1-gas-free-token.cloudfunctions.net/mint
-```
+- URL: **https://us-central1-gas-free-token.cloudfunctions.net/mint**
+- Method: POST
+- Content Type: application/json
 
 ## Description
 
@@ -36,6 +36,18 @@ The request body should be a JSON object containing the following fields:
 - signature (string, required): The signature provided by the user for verification purposes.
 - testMode (boolean, optional, default: false): A flag indicating whether the function is running in test mode. When set to true, the signature verification step will be skipped.
 
+## Response
+
+The API returns a JSON object with the following structure:
+
+```json
+{
+  "message": "string"
+}
+```
+
+- message (string): A success message indicating that the mint operation was successful.
+
 ## Errors
 
 - If the token has been migrated, the API returns an error.
@@ -55,18 +67,6 @@ The request body should be a JSON object containing the following fields:
 ```json
 { "message": "Error: Invalid amount. Value must be greater than or equal to 0." }
 ```
-
-## Response
-
-The API returns a JSON object with the following structure:
-
-```json
-{
-  "message": "string"
-}
-```
-
-- message (string): A success message indicating that the mint operation was successful.
 
 ## Example
 
