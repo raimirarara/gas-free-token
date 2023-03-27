@@ -10,32 +10,27 @@ type FeatureItem = {
 
 const FeatureList: FeatureItem[] = [
   {
-    title: "Easy to Use",
+    title: "Hassle-free Token Management",
     Svg: require("@site/static/img/undraw_docusaurus_mountain.svg").default,
-    description: (
-      <>
-        Docusaurus was designed from the ground up to be easily installed and used to get your website up and running
-        quickly.
-      </>
-    ),
+    description: <>Manage your tokens without any gas fees or manual management tasks, saving you time and money.</>,
   },
   {
-    title: "Focus on What Matters",
+    title: "Cloud-based Token Balances",
     Svg: require("@site/static/img/undraw_docusaurus_tree.svg").default,
     description: (
       <>
-        Docusaurus lets you focus on your docs, and we&apos;ll do the chores. Go ahead and move your docs into the{" "}
-        <code>docs</code> directory.
+        Keep your token balances safe and secure in the cloud, and distribute temporary or test tokens easily without
+        worrying about manually tracking balances.
       </>
     ),
   },
   {
-    title: "Powered by React",
+    title: "Seamless Token Migration",
     Svg: require("@site/static/img/undraw_docusaurus_react.svg").default,
     description: (
       <>
-        Extend or customize your website layout by reusing React. Docusaurus can be extended while reusing the same
-        header and footer.
+        Easily migrate your temporary tokens to your ERC20 contract and mint tokens to holders' wallets with just a few
+        clicks, simplifying the token issuance process.
       </>
     ),
   },
