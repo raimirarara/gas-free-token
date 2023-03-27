@@ -71,10 +71,20 @@ const config = {
         },
         items: [
           {
-            type: "doc",
-            docId: "intro",
-            position: "left",
+            label: "Overview",
+            to: "/docs/intro",
+          },
+          {
             label: "Tutorial",
+            to: "/docs/category/tutorial",
+          },
+          {
+            label: "Get Started",
+            to: "/docs/category/get-started",
+          },
+          {
+            label: "API",
+            to: "/docs/category/api",
           },
 
           {
@@ -91,8 +101,20 @@ const config = {
             title: "Docs",
             items: [
               {
-                label: "Tutorial",
+                label: "Overview",
                 to: "/docs/intro",
+              },
+              {
+                label: "Tutorial",
+                to: "/docs/category/tutorial",
+              },
+              {
+                label: "Get Started",
+                to: "/docs/category/get-started",
+              },
+              {
+                label: "API",
+                to: "/docs/category/api",
               },
             ],
           },

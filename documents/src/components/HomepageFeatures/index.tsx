@@ -11,12 +11,12 @@ type FeatureItem = {
 const FeatureList: FeatureItem[] = [
   {
     title: "Hassle-free Token Management",
-    Svg: require("@site/static/img/undraw_docusaurus_mountain.svg").default,
+    Svg: require("@site/static/img/undraw_savings.svg").default,
     description: <>Manage your tokens without any gas fees or manual management tasks, saving you time and money.</>,
   },
   {
     title: "Cloud-based Token Balances",
-    Svg: require("@site/static/img/undraw_docusaurus_tree.svg").default,
+    Svg: require("@site/static/img/undraw_secure_server.svg").default,
     description: (
       <>
         Keep your token balances safe and secure in the cloud, and distribute temporary or test tokens easily without
@@ -26,7 +26,7 @@ const FeatureList: FeatureItem[] = [
   },
   {
     title: "Seamless Token Migration",
-    Svg: require("@site/static/img/undraw_docusaurus_react.svg").default,
+    Svg: require("@site/static/img/undraw_transfer_money.svg").default,
     description: (
       <>
         Easily migrate your temporary tokens to your ERC20 contract and mint tokens to holders' wallets with just a few

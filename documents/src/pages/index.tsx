@@ -6,6 +6,7 @@ import Layout from "@theme/Layout"
 import HomepageFeatures from "@site/src/components/HomepageFeatures"
 
 import styles from "./index.module.css"
+import { MantineProvider } from "@mantine/core"
 
 function HomepageHeader() {
   const { siteConfig } = useDocusaurusContext()
@@ -31,10 +32,19 @@ export default function Home(): JSX.Element {
       title={`${siteConfig.title} - Hassle-Free Token Management and Migration for DAOs`}
       description="GasFree Token provides a hassle-free and cost-effective solution for DAOs and other token holders to manage their tokens and distribute them without incurring any gas fees. With GasFree Token, users can easily mint, transfer, burn, and check balances of their tokens through basic APIs, and keep their token balances securely stored in the cloud. When ready to deploy their ERC20 tokens on the mainnet, DAOs can seamlessly migrate their temporary tokens with just a few clicks, and have the equivalent amount of tokens automatically minted to holders' wallets. GasFree Token simplifies the token issuance process and saves time and money for DAOs."
     >
-      <HomepageHeader />
-      <main>
-        <HomepageFeatures />
-      </main>
+      <MantineProvider
+        theme={{
+          colors: {
+            brand: ["#536DFE"],
+          },
+          primaryColor: "brand",
+        }}
+      >
+        <HomepageHeader />
+        <main>
+          <HomepageFeatures />
+        </main>
+      </MantineProvider>
     </Layout>
   )
 }
