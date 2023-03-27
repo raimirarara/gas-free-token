@@ -1,4 +1,4 @@
-# Code Sample
+# Frontend
 
 ## Create a token
 
