@@ -67,7 +67,7 @@ const config = {
         title: "Gas Free Token",
         logo: {
           alt: "Gas Free Token Logo",
-          src: "img/logo.svg",
+          src: "img/gas-free-token_logo.png",
         },
         items: [
           {
