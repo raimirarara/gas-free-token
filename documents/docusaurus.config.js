@@ -6,7 +6,7 @@ const darkCodeTheme = require("prism-react-renderer/themes/dracula")
 
 /** @type {import('@docusaurus/types').Config} */
 const config = {
-  title: "GasFree Token",
+  title: "Gas-Free Token",
   tagline: "Manage your tokens, gas-free and hassle-free.",
   favicon: "img/favicon.ico",
 
@@ -64,9 +64,9 @@ const config = {
       // Replace with your project's social card
       image: "img/docusaurus-social-card.jpg",
       navbar: {
-        title: "Gas Free Token",
+        title: "Gas-Free Token",
         logo: {
-          alt: "Gas Free Token Logo",
+          alt: "Gas-Free Token Logo",
           src: "img/gas-free-token_logo.png",
         },
         items: [
