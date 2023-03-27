@@ -27,7 +27,10 @@ function HomepageHeader() {
 export default function Home(): JSX.Element {
   const { siteConfig } = useDocusaurusContext()
   return (
-    <Layout title={`Hello from ${siteConfig.title}`} description="Description will go into a meta tag in <head />">
+    <Layout
+      title={`${siteConfig.title} - Hassle-Free Token Management and Migration for DAOs`}
+      description="GasFree Token provides a hassle-free and cost-effective solution for DAOs and other token holders to manage their tokens and distribute them without incurring any gas fees. With GasFree Token, users can easily mint, transfer, burn, and check balances of their tokens through basic APIs, and keep their token balances securely stored in the cloud. When ready to deploy their ERC20 tokens on the mainnet, DAOs can seamlessly migrate their temporary tokens with just a few clicks, and have the equivalent amount of tokens automatically minted to holders' wallets. GasFree Token simplifies the token issuance process and saves time and money for DAOs."
+    >
       <HomepageHeader />
       <main>
         <HomepageFeatures />
