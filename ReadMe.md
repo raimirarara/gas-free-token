@@ -39,12 +39,6 @@ npm run serve
 npm run deploy
 ```
 
-以下エラーが出ている
-
-```
-Error: HTTP Error: 403, <?xml version='1.0' encoding='UTF-8'?><Error><Code>AccessDenied</Code><Message>Access denied.</Message><Details>service-346545168958@gcf-admin-robot.iam.gserviceaccount.com does not have storage.objects.create access to the Google Cloud Storage object. Permission 'storage.objects.create' denied on resource (or it may not exist).</Details></Error>
-```
-
 ### Run Local Blockchain
 
 secrets_template.ts を secrets.ts にリネームして、中身を書き換える
