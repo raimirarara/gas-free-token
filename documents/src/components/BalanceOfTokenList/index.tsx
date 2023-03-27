@@ -1,10 +1,8 @@
 import { Anchor, Button, Container, NumberInput, Table, Text } from "@mantine/core"
-import React, { useCallback, useEffect, useState } from "react"
+import React, { useEffect, useState } from "react"
 import { useAtom } from "jotai"
 import { TokenAddressAtom } from "@site/src/atoms/TokenAddressAtom"
 import { WalletAddressAtom } from "@site/src/atoms/WalletAddressAtom"
-import { getAccount } from "@site/src/utils/getAccount"
-import { getSignature } from "@site/src/utils/getSignature"
 import { BaseUrl } from "@site/src/constants/BaseUrl"
 
 type Props = {
@@ -19,7 +17,6 @@ export default function BalanceOfTokenList(props: Props) {
   const [balancesList, setBalancesList] = useState([])
 
   useEffect(() => {
-    console.log("res: ", props.isResOk)
     if (props.isResOk) {
       balanceOfTokenList()
       props.setIsResOk(false)

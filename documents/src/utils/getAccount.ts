@@ -6,7 +6,7 @@ export async function getAccount() {
   // get account
   try {
     accounts = await ethereum.request({
-      method: "eth_accounts",
+      method: "eth_requestAccounts",
     })
   } catch (err) {
     console.error(err)
