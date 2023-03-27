@@ -242,12 +242,18 @@ export class TokenService {
     return { message: "Successfully burned tokens." }
   }
 
-  static async balanceOfList(tokenAddress: string, testMode: boolean = false) {
+  static async balanceOfList(tokenAddress: string, walletAddress: string, testMode: boolean = false) {
     // Check if the token has already been migrated to another contract
     const migratedTokenAddress = await this.getDB(testMode).doc(tokenAddress).get()
+    if (!migratedTokenAddress.exists) {
+      throw new Error("NotFound error: The requested token address could not be found in the database.")
+    }
     const data = migratedTokenAddress.data()
     if (data?.Web3ContractAddress) {
       throw new Error(`This token is already migrated into ${data.Web3ContractAddress}`)
+    }
+    if (data) {
+      this.validateOwnership(walletAddress, data)
     }
 
     const db = this.getDB(testMode)

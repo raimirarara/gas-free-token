@@ -13,10 +13,11 @@ export const BalanceOfListTest = functions.https.onRequest(async (req, res) => {
 
   type RequestData = {
     tokenAddress: string
+    walletAddress: string
   }
-  const { tokenAddress }: RequestData = req.body
+  const { tokenAddress, walletAddress }: RequestData = req.body
   try {
-    const responseBody = await TokenService.balanceOfList(tokenAddress, true)
+    const responseBody = await TokenService.balanceOfList(tokenAddress, walletAddress, true)
     res.status(200).send(responseBody)
   } catch (error: any) {
     res.status(400).send({ message: error.message })
