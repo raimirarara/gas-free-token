@@ -112,7 +112,7 @@ export default function BurnToken() {
         required
       />
 
-      <Anchor component="button" onClick={() => setYourWallet()}>
+      <Anchor color="indigo" component="button" onClick={() => setYourWallet()}>
         Set your WalletAddress
       </Anchor>
       <NumberInput
@@ -125,7 +125,9 @@ export default function BurnToken() {
         onChange={(e: number) => onChangeAmount(e)}
         step={100}
       />
-      <Button onClick={() => burnToken()}>Burn your Token</Button>
+      <Button color="indigo" onClick={() => burnToken()}>
+        Burn your Token
+      </Button>
 
       {reqError && (
         <Text size={"md"} color="red">

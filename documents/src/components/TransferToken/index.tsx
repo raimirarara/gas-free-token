@@ -1,4 +1,4 @@
-import { Anchor, Button, Container, Flex, Input, NumberInput, Text, TextInput } from "@mantine/core"
+import { Anchor, Button, Container, Flex, Input, MantineProvider, NumberInput, Text, TextInput } from "@mantine/core"
 import React, { useEffect, useState } from "react"
 import { useAtom } from "jotai"
 import { TokenAddressAtom } from "@site/src/atoms/TokenAddressAtom"
@@ -128,7 +128,7 @@ export default function TransferToken() {
         error={senderError}
         required
       />
-      <Anchor component="button" onClick={() => setYourWallet()}>
+      <Anchor color="indigo" component="button" onClick={() => setYourWallet()}>
         Set your WalletAddress
       </Anchor>
       <TextInput
@@ -142,7 +142,7 @@ export default function TransferToken() {
         error={recipientError}
         required
       />
-      <Anchor component="button" onClick={() => setRandomWallet()}>
+      <Anchor color="indigo" component="button" onClick={() => setRandomWallet()}>
         Set random WalletAddress
       </Anchor>
       <NumberInput
@@ -155,7 +155,9 @@ export default function TransferToken() {
         onChange={(e: number) => onChangeAmount(e)}
         step={100}
       />
-      <Button onClick={() => transferToken()}>Send your Token</Button>
+      <Button color="indigo" onClick={() => transferToken()}>
+        Send your Token
+      </Button>
       {reqError && (
         <Text size={"md"} color="red">
           {reqError}

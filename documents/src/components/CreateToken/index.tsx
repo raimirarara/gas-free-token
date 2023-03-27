@@ -53,7 +53,9 @@ export default function CreateToken() {
 
   return (
     <Container>
-      <Button onClick={() => createToken()}>Create your Token</Button>
+      <Button color="indigo" onClick={() => createToken()}>
+        Create your Token
+      </Button>
       {error && <Text color="red">{error}</Text>}
       <TextInput
         size={"lg"}

@@ -94,7 +94,9 @@ export default function MigrateToken() {
         onChange={(e) => setTokenSymbol(e.target.value)}
         required
       />
-      <Button onClick={() => migrateToken()}>Migrate your Token</Button>
+      <Button color="indigo" onClick={() => migrateToken()}>
+        Migrate your Token
+      </Button>
 
       {reqError && (
         <Text size={"md"} color="red">

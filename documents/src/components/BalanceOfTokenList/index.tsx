@@ -76,7 +76,7 @@ export default function BalanceOfTokenList(props: Props) {
           <tbody>{rows}</tbody>
         </Table>
       )}
-      <Anchor component="button" onClick={() => balanceOfTokenList()}>
+      <Anchor color="indigo" component="button" onClick={() => balanceOfTokenList()}>
         Get balances List
       </Anchor>
     </div>
