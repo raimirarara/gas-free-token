@@ -30,6 +30,7 @@ export default function BurnToken() {
   }
 
   function onBlur(to: string) {
+    if (!to) return
     if (!isAddress(to)) {
       setError("Invalid wallet address'")
     }

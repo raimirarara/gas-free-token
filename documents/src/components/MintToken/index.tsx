@@ -30,6 +30,7 @@ export default function MintToken() {
   }
 
   function onBlur(to: string) {
+    if (!to) return
     if (!isAddress(to)) {
       setError("Invalid wallet address'")
     }

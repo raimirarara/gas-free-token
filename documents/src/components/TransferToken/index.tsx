@@ -51,6 +51,7 @@ export default function TransferToken() {
   }
 
   function onBlur(walletAddress: string, isSender: boolean) {
+    if (!walletAddress) return
     if (!isAddress(walletAddress)) {
       if (isSender) {
         setSenderError("Invalid wallet address'")
