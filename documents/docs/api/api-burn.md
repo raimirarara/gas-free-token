@@ -99,10 +99,22 @@ Content-Type: application/json
 
 ```json
 {
-"tokenAddress": "3d3e5d5e4a4d11ecb2ff9a9a4a9b9c9b",
-"from": "0x742d35Cc6634C0532925a3b844Bc454e4438f44e",
-"amount": 1000,
-"walletAddress": "0x742d35Cc6634C0532925a3b844Bc454e4438f44e",
-"signature": "0x7b46e862deb24a7a65
+  "tokenAddress": "0x123456789abcdef",
+  "from": "0x23456789abcdef1",
+  "amount": 50,
+  "walletAddress": "0x742d35Cc6634C0532925a3b844Bc454e4438f44e",
+  "signature": "0x7b46e862deb24a7a65a87f0197d9b8745c5ef5ecf1b90a8d51f4175a15f1a2e5",
+  "testMode": false
+}
+```
+
+### Response
+
+HTTP/1.1 200 OK
+Content-Type: application/json
+
+```json
+{
+  "message": "Successfully burned tokens."
 }
 ```
