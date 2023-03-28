@@ -4,6 +4,7 @@ import { useAtom } from "jotai"
 import { TokenAddressAtom } from "@site/src/atoms/TokenAddressAtom"
 import { WalletAddressAtom } from "@site/src/atoms/WalletAddressAtom"
 import { BaseUrl } from "@site/src/constants/BaseUrl"
+import { Notifications, hideNotification, showNotification } from "@mantine/notifications"
 
 type Props = {
   isResOk: boolean
@@ -24,6 +25,15 @@ export default function BalanceOfTokenList(props: Props) {
   }, [props.isResOk])
 
   async function balanceOfTokenList() {
+    showNotification({
+      id: "balanceOfList",
+      title: "Getting your Token balances",
+      message: "Please wait a few seconds!",
+      color: "indigo",
+      loading: true,
+      autoClose: false,
+    })
+
     const url = BaseUrl + "/balanceOfList"
     const response = await fetch(url, {
       method: "POST",
@@ -35,6 +45,8 @@ export default function BalanceOfTokenList(props: Props) {
         walletAddress: walletAddress,
       }),
     })
+
+    hideNotification("balanceOfList")
 
     const responseBody = await response.json()
 
@@ -76,6 +88,7 @@ export default function BalanceOfTokenList(props: Props) {
       <Anchor color="indigo" component="button" onClick={() => balanceOfTokenList()}>
         Get balances List
       </Anchor>
+      <Notifications />
     </div>
   )
 }
