@@ -6,6 +6,7 @@ import { WalletAddressAtom } from "@site/src/atoms/WalletAddressAtom"
 import { getAccount } from "@site/src/utils/getAccount"
 import { getSignature } from "@site/src/utils/getSignature"
 import { BaseUrl } from "@site/src/constants/BaseUrl"
+import { Notifications, hideNotification, showNotification } from "@mantine/notifications"
 
 export default function MigrateToken() {
   const [tokenAddress, setTokenAddress] = useAtom(TokenAddressAtom)
@@ -24,7 +25,16 @@ export default function MigrateToken() {
   async function migrateToken() {
     setReqError("")
 
-    if (!isMetaMaskInstalled) return alert("Please install metamask")
+    if (!isMetaMaskInstalled) return setReqError("Please install metamask!")
+
+    showNotification({
+      id: "migrate",
+      title: "Migrating your Token",
+      message: "Please wait a few seconds!",
+      color: "indigo",
+      loading: true,
+      autoClose: false,
+    })
 
     const address = await getAccount()
 
@@ -32,8 +42,8 @@ export default function MigrateToken() {
 
     const sign = await getSignature(address)
 
-    if (!walletAddress || !tokenAddress) return alert("Please create your Token")
-    if (!tokenName || !tokenSymbol) return alert("Please enter Token Name and Token Symbol")
+    if (!walletAddress || !tokenAddress) return setReqError("Please create your Token!")
+    if (!tokenName || !tokenSymbol) return setReqError("Please enter Token Name and Token Symbol!")
 
     const url = BaseUrl + "/migrate"
     const response = await fetch(url, {
@@ -50,9 +60,14 @@ export default function MigrateToken() {
       }),
     })
 
-    const responseBody = await response.json()
+    hideNotification("migrate")
 
-    setWeb3ContractAddress(responseBody.web3ContractAddress)
+    const responseBody = await response.json()
+    if (response.ok) {
+      setWeb3ContractAddress(responseBody.web3ContractAddress)
+    } else {
+      setReqError(responseBody.message)
+    }
   }
 
   return (
@@ -112,6 +127,7 @@ export default function MigrateToken() {
         onChange={(e) => setTokenSymbol(e.target.value)}
         disabled={!web3ContractAddress}
       />
+      <Notifications />
     </Container>
   )
 }

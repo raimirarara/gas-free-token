@@ -8,6 +8,7 @@ import { getSignature } from "@site/src/utils/getSignature"
 import { BaseUrl } from "@site/src/constants/BaseUrl"
 import { ethers, isAddress } from "ethers"
 import BalanceOfTokenList from "../BalanceOfTokenList"
+import { Notifications, hideNotification, showNotification } from "@mantine/notifications"
 
 export default function TransferToken() {
   const [tokenAddress, setTokenAddress] = useAtom(TokenAddressAtom)
@@ -68,7 +69,16 @@ export default function TransferToken() {
   async function transferToken() {
     setReqError("")
 
-    if (!isMetaMaskInstalled) return alert("Please install metamask")
+    if (!isMetaMaskInstalled) return setReqError("Please install metamask")
+
+    showNotification({
+      id: "transfer",
+      title: "Transferring your Token",
+      message: "Please wait a few seconds!",
+      color: "indigo",
+      loading: true,
+      autoClose: false,
+    })
 
     const address = await getAccount()
 
@@ -76,7 +86,7 @@ export default function TransferToken() {
 
     const sign = await getSignature(address)
 
-    if (!walletAddress || !tokenAddress) return alert("Please create your Token")
+    if (!walletAddress || !tokenAddress) return setReqError("Please create your Token!")
 
     const url = BaseUrl + "/transfer"
     const response = await fetch(url, {
@@ -92,6 +102,8 @@ export default function TransferToken() {
         signature: sign,
       }),
     })
+
+    hideNotification("transfer")
 
     if (response.ok) {
       setIsResOk(true)
@@ -165,6 +177,7 @@ export default function TransferToken() {
         </Text>
       )}
       <BalanceOfTokenList isResOk={isResOk} setIsResOk={setIsResOk} />
+      <Notifications />
     </Container>
   )
 }

@@ -6,6 +6,7 @@ import { WalletAddressAtom } from "@site/src/atoms/WalletAddressAtom"
 import { getAccount } from "@site/src/utils/getAccount"
 import { getSignature } from "@site/src/utils/getSignature"
 import { BaseUrl } from "@site/src/constants/BaseUrl"
+import { Notifications, hideNotification, showNotification } from "@mantine/notifications"
 
 export default function CreateToken() {
   const [tokenAddress, setTokenAddress] = useAtom(TokenAddressAtom)
@@ -21,7 +22,16 @@ export default function CreateToken() {
   async function createToken() {
     setError("")
 
-    if (!isMetaMaskInstalled) return alert("Please install metamask")
+    if (!isMetaMaskInstalled) return setError("Please install metamask")
+
+    showNotification({
+      id: "create",
+      title: "Creating your Token",
+      message: "Please wait a few seconds!",
+      color: "indigo",
+      loading: true,
+      autoClose: false,
+    })
 
     try {
       const address = await getAccount()
@@ -44,8 +54,14 @@ export default function CreateToken() {
         }),
       })
 
+      hideNotification("create")
+
       const responseBody = await response.json()
-      setTokenAddress(responseBody.tokenAddress as string)
+      if (response.ok) {
+        setTokenAddress(responseBody.tokenAddress as string)
+      } else {
+        setError(responseBody.message)
+      }
     } catch {
       setError("Not able to get accounts. Please login metamask!")
     }
@@ -74,6 +90,7 @@ export default function CreateToken() {
         disabled={!tokenAddress}
         readOnly
       />
+      <Notifications />
     </Container>
   )
 }

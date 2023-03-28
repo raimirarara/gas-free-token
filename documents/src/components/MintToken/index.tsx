@@ -8,6 +8,7 @@ import { getSignature } from "@site/src/utils/getSignature"
 import { BaseUrl } from "@site/src/constants/BaseUrl"
 import { isAddress } from "ethers"
 import BalanceOfTokenList from "../BalanceOfTokenList"
+import { Notifications, hideNotification, showNotification } from "@mantine/notifications"
 
 export default function MintToken() {
   const [tokenAddress, setTokenAddress] = useAtom(TokenAddressAtom)
@@ -52,7 +53,16 @@ export default function MintToken() {
   async function mintToken() {
     setReqError("")
 
-    if (!isMetaMaskInstalled) return alert("Please install metamask")
+    if (!isMetaMaskInstalled) return setReqError("Please install metamask!")
+
+    showNotification({
+      id: "mint",
+      title: "Minting your Token",
+      message: "Please wait a few seconds!",
+      color: "indigo",
+      loading: true,
+      autoClose: false,
+    })
 
     const address = await getAccount()
 
@@ -60,7 +70,7 @@ export default function MintToken() {
 
     const sign = await getSignature(address)
 
-    if (!walletAddress || !tokenAddress) return setError("Please go back and start over from the Create Token page.")
+    if (!walletAddress || !tokenAddress) return setReqError("Please go back and start over from the Create Token page.")
 
     const url = BaseUrl + "/mint"
     const response = await fetch(url, {
@@ -77,12 +87,14 @@ export default function MintToken() {
       }),
     })
 
+    hideNotification("mint")
+
     if (response.ok) {
       setIsResOk(true)
+    } else {
+      const errMag = await response.json()
+      setReqError(errMag.message)
     }
-
-    // const responseBody = await response.json()
-    // console.log("responseBody: ", responseBody)
   }
 
   return (
@@ -135,6 +147,7 @@ export default function MintToken() {
         </Text>
       )}
       <BalanceOfTokenList isResOk={isResOk} setIsResOk={setIsResOk} />
+      <Notifications />
     </Container>
   )
 }
