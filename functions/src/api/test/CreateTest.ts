@@ -1,5 +1,5 @@
 import * as functions from "firebase-functions"
-import { TokenService } from "../service/TokenService"
+import { TokenService } from "../../service/TokenService"
 
 export const CreateTest = functions.https.onRequest(async (req, res) => {
     res.set("Access-Control-Allow-Origin", "*")

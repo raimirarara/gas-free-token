@@ -1,5 +1,5 @@
 import * as functions from "firebase-functions"
-import { TokenService } from "../service/TokenService"
+import { TokenService } from "../../service/TokenService"
 
 export const MigrateTest = functions.https.onRequest(async (req, res) => {
     res.set("Access-Control-Allow-Origin", "*")

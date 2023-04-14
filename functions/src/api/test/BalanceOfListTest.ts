@@ -1,7 +1,7 @@
 import * as functions from "firebase-functions"
-import { TokenService } from "../service/TokenService"
+import { TokenService } from "../../service/TokenService"
 
-export const MintTest = functions.https.onRequest(async (req, res) => {
+export const BalanceOfListTest = functions.https.onRequest(async (req, res) => {
     res.set("Access-Control-Allow-Origin", "*")
     if (req.method === "OPTIONS") {
         res.set("Access-Control-Allow-Methods", "GET")
@@ -13,19 +13,13 @@ export const MintTest = functions.https.onRequest(async (req, res) => {
 
     type RequestData = {
         tokenAddress: string
-        to: string
-        amount: number
         walletAddress: string
-        signature: string
     }
-    const { tokenAddress, to, amount, walletAddress, signature }: RequestData = req.body
+    const { tokenAddress, walletAddress }: RequestData = req.body
     try {
-        const responseBody = await TokenService.mint(
+        const responseBody = await TokenService.balanceOfList(
             tokenAddress,
-            to,
-            amount,
             walletAddress,
-            signature,
             true
         )
         res.status(200).send(responseBody)
